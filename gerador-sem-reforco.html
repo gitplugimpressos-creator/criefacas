@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sacola sem Reforço — CrieFacas</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #faf9f5;
+    --surface: #ffffff;
+    --border: rgba(0,0,0,0.12);
+    --border-strong: rgba(0,0,0,0.25);
+    --text: #1f1f1d;
+    --text-secondary: #5f5e5a;
+    --text-tertiary: #888780;
+    --accent: #D85A30;
+    --accent-hover: #993C1D;
+    --info-bg: #E6F1FB;
+    --info-text: #0C447C;
+    --error-bg: #FCEBEB;
+    --error-text: #791F1F;
+    --section-bg: #f5f4ed;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --surface: #25251f;
+      --border: rgba(255,255,255,0.15);
+      --border-strong: rgba(255,255,255,0.3);
+      --text: #f5f4ed;
+      --text-secondary: #b4b2a9;
+      --text-tertiary: #888780;
+      --info-bg: #042C53;
+      --info-text: #85B7EB;
+      --error-bg: #501313;
+      --error-text: #F09595;
+      --section-bg: #2c2c26;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .layout-2col {
+    display: grid;
+    grid-template-columns: minmax(380px, 480px) 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .col-form {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
+  }
+  .col-preview {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    position: sticky;
+    top: 1rem;
+  }
+  .preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .preview-header h3 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .preview-header .ao-vivo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+  }
+  .ao-vivo::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #21BA45;
+    display: inline-block;
+  }
+  .preview-svg {
+    background: var(--section-bg);
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .preview-svg svg {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+  }
+  .preview-info {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: var(--section-bg);
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .preview-info .item {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+  }
+  .preview-info .item b {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .preview-vazio {
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    padding: 60px 20px;
+  }
+  @media (max-width: 900px) {
+    .layout-2col { grid-template-columns: 1fr; }
+    .col-preview { position: static; }
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0 0 4px;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0 0 2rem;
+  }
+  .section {
+    margin-bottom: 1.75rem;
+  }
+  .section-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+  }
+  .field { margin-bottom: 1rem; }
+  label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  input[type="number"] {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    border: 0.5px solid var(--border-strong);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.15s;
+  }
+  input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(216, 90, 48, 0.15);
+  }
+  input[type="number"]:disabled {
+    background: var(--section-bg);
+    cursor: not-allowed;
+  }
+  input[type="number"]:disabled::placeholder {
+    color: #C2410C;
+    font-weight: 600;
+    opacity: 1;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 480px) {
+    .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  }
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 14px;
+    background: var(--section-bg);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .checkbox-row:hover { background: var(--border); }
+  .checkbox-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 12px;
+    cursor: pointer;
+    accent-color: var(--accent);
+  }
+  .checkbox-row .opt-label {
+    font-size: 14px;
+    flex: 1;
+  }
+  .checkbox-row .opt-desc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+  }
+  .suboption {
+    display: none;
+    padding: 10px 14px;
+    margin-top: -4px;
+    margin-bottom: 8px;
+    margin-left: 30px;
+    background: var(--section-bg);
+    border-radius: 0 0 8px 8px;
+    font-size: 13px;
+  }
+  .suboption.show { display: block; }
+  .suboption .radio-group {
+    display: flex;
+    gap: 16px;
+    margin-top: 4px;
+  }
+  .suboption label.radio {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    color: var(--text);
+    font-weight: 400;
+  }
+  .suboption label.radio input {
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .info-box {
+    background: var(--info-bg);
+    color: var(--info-text);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 1.25rem 0;
+    font-size: 13px;
+  }
+  .info-box .label {
+    color: var(--info-text);
+    opacity: 0.75;
+    margin-bottom: 2px;
+  }
+  .info-box .value {
+    font-weight: 500;
+    font-size: 15px;
+  }
+  .error-box {
+    background: var(--error-bg);
+    color: var(--error-text);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 1.25rem 0;
+    font-size: 13px;
+    display: none;
+  }
+  .error-box.show { display: block; }
+  button.primary {
+    width: 100%;
+    height: 44px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-family: inherit;
+  }
+  button.primary:hover { background: var(--accent-hover); }
+  button.primary:active { transform: scale(0.98); }
+  button.primary:disabled {
+    background: var(--text-tertiary);
+    cursor: not-allowed;
+  }
+  .specs {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 0.5px solid var(--border);
+    font-size: 12px;
+    color: var(--text-tertiary);
+    line-height: 1.7;
+  }
+  .specs strong {
+    color: var(--text-secondary);
+    font-weight: 500;
+    display: block;
+    margin-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <!-- BARRA DE CONTADOR DE FACAS (largura completa, fora do 2col) -->
+    <div id="barra-contador" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--section-bg); border-radius: 8px; margin-bottom: 1.5rem; border: 0.5px solid var(--border);">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 13px; color: var(--text-secondary);">Olá,</span>
+        <span id="nome-usuario" style="font-size: 13px; font-weight: 500;">[Nome do Usuário]</span>
+        <span style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(216, 90, 48, 0.15); color: var(--accent);">
+          <span id="plano-usuario">FREE</span>
+        </span>
+      </div>
+      <div style="text-align: right;">
+        <div id="contador-facas" style="font-size: 14px; font-weight: 500;">
+          <span id="facas-restantes">2</span> de <span id="facas-total">2</span> facas restantes
+        </div>
+        <div style="font-size: 11px; color: var(--text-tertiary);">este mês</div>
+      </div>
+    </div>
+
+    <!-- AVISO DE LIMITE ATINGIDO (oculto por padrão) -->
+    <div id="aviso-limite" style="display: none; padding: 14px 18px; background: rgba(216, 90, 48, 0.08); border: 0.5px solid var(--accent); border-radius: 8px; margin-bottom: 1.5rem;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="ti ti-info-circle" style="font-size: 18px; color: var(--accent);"></i>
+        <div style="flex: 1; font-size: 13px;">
+          <strong>Você atingiu o limite mensal de facas.</strong>
+          <span style="color: var(--text-secondary);">Considere fazer upgrade do seu plano para continuar criando.</span>
+        </div>
+        <a href="/planos" style="font-size: 13px; padding: 6px 14px; background: var(--accent); color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">Ver planos</a>
+      </div>
+    </div>
+
+    <div class="layout-2col">
+      <div class="col-form">
+        <h1>Sacola sem Reforço</h1>
+        <p class="subtitle">Sacola de papel simples, sem reforço no topo. Estrutura limpa e econômica.</p>
+
+    <div class="section">
+      <div class="section-title">Dimensões da sacola fechada</div>
+      <div class="grid-3">
+        <div class="field">
+          <label for="largura">Largura (cm)</label>
+          <input type="number" id="largura" placeholder="ex: 34" min="10" max="80" step="0.5">
+        </div>
+        <div class="field">
+          <label for="altura">Altura (cm)</label>
+          <input type="number" id="altura" placeholder="ex: 24" min="10" max="80" step="0.5">
+        </div>
+        <div class="field">
+          <label for="lateral">Lateral (cm)</label>
+          <input type="number" id="lateral" placeholder="ex: 10" min="4" max="25" step="0.5">
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Tipo de saída</div>
+      <div class="field">
+        <select id="tipo_saida" style="width: 100%; height: 40px; padding: 0 12px; border: 0.5px solid var(--border-strong); border-radius: 8px; background: var(--surface); color: var(--text); font-size: 15px; font-family: inherit;">
+          <option value="faca">Faca Gráfica (clicheria — magenta CutContour)</option>
+          <option value="plotter">Plotter de Recorte (Silhouette / Cricut — vermelho + azul)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Tipo de montagem</div>
+      <div style="display: flex; gap: 8px;">
+        <label class="checkbox-row" style="flex: 1; cursor: pointer;">
+          <input type="radio" name="tipo_peca" value="meia" checked style="margin-right: 12px; accent-color: var(--accent);">
+          <div class="opt-label">2 partes (meia sacola)</div>
+        </label>
+        <label class="checkbox-row" style="flex: 1; cursor: pointer;">
+          <input type="radio" name="tipo_peca" value="inteira" style="margin-right: 12px; accent-color: var(--accent);">
+          <div class="opt-label">1 parte (sacola inteira)</div>
+        </label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Acabamentos</div>
+      <div class="grid-2">
+        <div class="field">
+          <label for="aba">Largura da aba de cola (mm)</label>
+          <input type="number" id="aba" value="20" min="15" max="25" step="1">
+        </div>
+        <div class="field">
+          <label for="reforco">Altura do reforço (mm)</label>
+          <input type="number" id="reforco" value="20" min="15" max="30" step="1">
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="info-box" id="info">
+      <div class="label">Planificação calculada</div>
+      <div class="value" id="planinfo">— × — mm</div>
+    </div>
+
+    <div class="error-box" id="erro"></div>
+
+    <button class="primary" id="gerar">Gerar e baixar PDF</button>
+
+    <div class="specs">
+      <strong>Especificações fixas:</strong>
+      Fundo P/2 + 0,3mm · Presilhas anti-rasgo com meia-lua r=1mm ·
+      Aba inclinada 2° em V1 · Cores spot CutContour (corte) e tracejado (vinco)
+    </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const { jsPDF } = window.jspdf;
+
+const els = {
+  largura: document.getElementById('largura'),
+  altura: document.getElementById('altura'),
+  lateral: document.getElementById('lateral'),
+  aba: document.getElementById('aba'),
+  tipo_saida: document.getElementById('tipo_saida'),
+};
+const planinfo = document.getElementById('planinfo');
+const erroBox = document.getElementById('erro');
+const btn = document.getElementById('gerar');
+
+function getConfig() {
+  return {
+    L: parseFloat(els.largura.value) * 10,
+    A: parseFloat(els.altura.value) * 10,
+    P: parseFloat(els.lateral.value) * 10,
+    aba: parseFloat(els.aba.value),
+    reforco: 0,
+    reforco: 0,
+    cordao: false,
+    cordao_gap: 120,
+    alca: false,
+    laco: false,
+    laco_h: 15,
+    tipo_peca: document.querySelector('input[name="tipo_peca"]:checked').value,
+    tipo_sacola: 'simples',
+    tipo_saida: els.tipo_saida.value,
+  };
+}
+
+function validar(c) {
+  if (!isFinite(c.L) || !isFinite(c.A) || !isFinite(c.P)) {
+    return "__empty__";  // silenciar — campos vazios é estado inicial normal
+  }
+  if (c.L < 80 || c.A < 80 || c.P < 30) {
+    return "Dimensões muito pequenas (mínimos: L=8cm, A=8cm, P=3cm)";
+  }
+  if (c.A <= c.P / 2) {
+    return `Altura deve ser maior que metade da lateral (mín: ${(c.P/20).toFixed(1)}cm)`;
+  }
+  if (c.aba < 15 || c.aba > 25) return "Aba deve estar entre 15 e 25mm";
+  return null;
+}
+
+function atualizar() {
+  const c = getConfig();
+  // Atualizar preview SVG ao vivo
+  renderPreview(c);
+
+  const erro = validar(c);
+  if (erro) {
+    if (erro === "__empty__") {
+      erroBox.classList.remove('show');
+    } else {
+      erroBox.textContent = erro;
+      erroBox.classList.add('show');
+    }
+    btn.disabled = true;
+    planinfo.textContent = "— × — mm";
+    return;
+  }
+  erroBox.classList.remove('show');
+  btn.disabled = false;
+  const meia = c.P / 2;
+  const folga = 3;
+  const planoH = (c.tipo_sacola === 'simples' ? 0 : c.reforco) + c.A + (meia + folga);
+  let planoW;
+  if (c.tipo_peca === 'inteira') {
+    // [½lat | L | P | L | ½lat | aba] = 2L + 2P/2 + P + aba = 2L + 2P + aba
+    planoW = meia + c.L + c.P + c.L + meia + c.aba;
+  } else {
+    planoW = meia + c.L + meia + c.aba;
+  }
+  planinfo.textContent = `${planoW.toFixed(0)} × ${planoH.toFixed(1)} mm`;
+}
+
+Object.values(els).forEach(el => {
+  if (el && el.addEventListener) el.addEventListener('input', atualizar);
+});
+document.querySelectorAll('input[name="laco_h"], input[name="tipo_peca"]').forEach(r =>
+  r.addEventListener('change', atualizar)
+);
+els.tipo_saida.addEventListener('change', atualizar);
+atualizar();
+
+function gerarPDF() {
+  const c = getConfig();
+  if (validar(c)) return;
+
+  const L = c.L, A = c.A, P = c.P;
+  const simples = (c.tipo_sacola === 'simples');
+  const reforco = simples ? 0 : c.reforco;
+  const aba = c.aba, folga = 3;
+  const inclinacao = 2 * Math.PI / 180;
+  const meia = P / 2;
+  const fundo_h = meia + folga;
+  const regiao = meia;
+  const corpo = A - regiao;
+  const inteira = (c.tipo_peca === 'inteira');
+
+  const abertura = 8;
+  const raio_meia = 1.0;
+  const raio_canto = 3;
+  const k = 0.5522847498;
+
+  const d_furo = 13;
+  const dr = 6, df = 5;
+  const gap_furos = c.cordao_gap;
+  const comp_fenda = 26, esp_fenda = 0.5;
+  const laco_w = 5, laco_h = c.laco_h, laco_gap = 15, laco_dist = 30;
+
+  const planoW = inteira ? (meia + L + P + L + meia + aba) : (meia + L + meia + aba);
+  // Espaços reservados em volta da peça
+  const espaco_descricao = 10;   // 10mm entre a peça e o texto descrição
+  const altura_descricao = 35;   // 2 linhas: medidas (32pt) + texto legal (10pt)
+  const margem_min = 40;         // margem maior para acomodar legenda no canto sup direito
+  const planoH = reforco + A + fundo_h;
+  // PDF: peça centralizada + margem em volta + descrição abaixo
+  const pagW = planoW + 2*margem_min;
+  const pagH = planoH + 2*margem_min + espaco_descricao + altura_descricao;
+
+  const pdf = new jsPDF({
+    orientation: pagW > pagH ? 'landscape' : 'portrait',
+    unit: 'mm',
+    format: [pagW, pagH],
+  });
+  pdf.setProperties({
+    title: `FACA ${L/10}x${A/10}x${P/10} cm`,
+    author: 'Gerador de Facas',
+  });
+
+  // Centralização: peça fica EXATAMENTE no centro horizontal+vertical do PDF
+  // (legenda fica em uma área livre, sobrepondo a margem direita)
+  const offsetX = (pagW - planoW) / 2;
+  const area_util_H = pagH - espaco_descricao - altura_descricao;
+  const offsetY = (area_util_H - planoH) / 2;
+  function ty(y) { return area_util_H - offsetY - y; }
+  function tx(x) { return offsetX + x; }
+
+  // Coordenadas X — depende do tipo
+  const x_esq = 0;
+  let x_v_list;  // posições dos vincos verticais (ordenados esq→dir, exceto aba)
+  let x_pres_list;  // posições das presilhas (V que produzem presilha na base)
+  let x_dir;
+  let x_centro_frente1, x_centro_frente2;  // centros das frentes (1 ou 2)
+  let x_vmeio_var = null;  // vinco central da lateral completa (só na peça inteira)
+
+  if (inteira) {
+    // [½lat | L | P | L | ½lat | aba]
+    const x_va = meia;                  // ½lat esq → frente
+    const x_vb = x_va + L;              // frente → lateral completa
+    const x_vmeio = x_vb + P/2;         // meio da lateral completa (vinco principal de dobra)
+    const x_vc = x_vb + P;              // lateral completa → costas
+    const x_vd = x_vc + L;              // costas → ½lat dir
+    const x_ve = x_vd + meia;           // ½lat dir → aba
+    x_dir = x_ve + aba;
+    x_v_list = [x_va, x_vb, x_vc, x_vd, x_ve];
+    x_pres_list = [x_va, x_vb, x_vc, x_vd];
+    x_vmeio_var = x_vmeio;  // guardar para usar nos vincos
+    x_centro_frente1 = (x_va + x_vb) / 2;
+    x_centro_frente2 = (x_vc + x_vd) / 2;
+  } else {
+    const x_v3 = meia;
+    const x_v2 = x_v3 + L;
+    const x_v1 = x_v2 + meia;
+    x_dir = x_v1 + aba;
+    x_v_list = [x_v3, x_v2, x_v1];
+    x_pres_list = [x_v3, x_v2];
+    x_centro_frente1 = (x_v3 + x_v2) / 2;
+    x_centro_frente2 = null;
+  }
+
+  const y_base = 0;
+  const y_h3 = fundo_h;
+  const y_h2 = y_h3 + regiao;
+  const y_h1 = y_h2 + corpo;
+  const y_topo = y_h1 + reforco;
+  const descida_n = Math.tan(inclinacao) * aba;
+  const y_n = y_topo - descida_n;
+
+  // ===== CORES baseadas no tipo de saída =====
+  const plotter = (c.tipo_saida === 'plotter');
+  // CORTE
+  const COR_CORTE = plotter ? [255, 0, 0] : [216, 0, 122];
+  // VINCO
+  const COR_VINCO = plotter ? [0, 0, 255] : [216, 0, 122];
+  // Estilo do vinco
+  const VINCO_TRACEJADO = !plotter; // faca = tracejado, plotter = sólido
+
+  pdf.setDrawColor(COR_CORTE[0], COR_CORTE[1], COR_CORTE[2]);
+  pdf.setLineWidth(0.25);
+
+  const meia_ab = abertura / 2;
+  const rc = raio_canto;
+  const rm = raio_meia;
+
+  const path = [];
+  function moveTo(x, y) { path.push(['M', x, y]); }
+  function lineTo(x, y) { path.push(['L', x, y]); }
+  function curveTo(c1x, c1y, c2x, c2y, x, y) { path.push(['C', c1x, c1y, c2x, c2y, x, y]); }
+
+  // Topo e laterais
+  moveTo(x_esq, y_base);
+  lineTo(x_esq, y_topo);
+  // Topo até o último vinco vertical (V1 ou Ve) antes da aba
+  const x_ult_v = x_v_list[x_v_list.length - 1];
+  lineTo(x_ult_v, y_topo);
+  // Topo da aba (inclinado 2°)
+  lineTo(x_dir, y_n);
+  lineTo(x_dir, y_base);
+
+  // Percorrer presilhas da DIREITA para a ESQUERDA (a base é desenhada da direita para esquerda)
+  const presilhas_rev = [...x_pres_list].reverse();
+  let x_prev = x_dir;
+  for (const x_pres of presilhas_rev) {
+    const x_p1 = x_pres - meia_ab, x_p2 = x_pres + meia_ab;
+    const x_g = x_pres, y_g = y_h3;
+    const x_a1 = x_pres - rm, x_a2 = x_pres + rm;
+    const y_a = y_h3 - rm;
+    // base até início do canto P2 (à direita da presilha)
+    lineTo(x_p2 + rc, y_base);
+    // canto P2
+    curveTo(x_p2 + rc*0.45, y_base, x_p2, y_base + rc*0.55, x_p2, y_base + rc);
+    // sobe reta até início da meia-lua
+    lineTo(x_a2, y_a);
+    // meia-lua (2 quartos)
+    curveTo(x_a2, y_a + k*rm, x_pres + k*rm, y_g, x_pres, y_g);
+    curveTo(x_pres - k*rm, y_g, x_a1, y_a + k*rm, x_a1, y_a);
+    // desce reta até o canto P1
+    lineTo(x_p1, y_base + rc);
+    // canto P1
+    curveTo(x_p1, y_base + rc*0.55, x_p1 - rc*0.45, y_base, x_p1 - rc, y_base);
+    x_prev = x_p1 - rc;
+  }
+  // Base final até x_esq
+  lineTo(x_esq, y_base);
+
+  let cur_x = 0, cur_y = 0;
+  for (const seg of path) {
+    if (seg[0] === 'M') {
+      cur_x = seg[1]; cur_y = seg[2];
+    } else if (seg[0] === 'L') {
+      pdf.line(tx(cur_x), ty(cur_y), tx(seg[1]), ty(seg[2]));
+      cur_x = seg[1]; cur_y = seg[2];
+    } else if (seg[0] === 'C') {
+      const [_, c1x, c1y, c2x, c2y, x, y] = seg;
+      pdf.lines(
+        [[c1x - cur_x, -(c1y - cur_y), c2x - cur_x, -(c2y - cur_y), x - cur_x, -(y - cur_y)]],
+        tx(cur_x), ty(cur_y),
+        [1, 1], 'S', false
+      );
+      cur_x = x; cur_y = y;
+    }
+  }
+
+  const largura_util = L - 20;
+  const gap_seguro = Math.min(gap_furos, largura_util);
+
+  // Lista de centros de frente onde colocar furos/fendas/laços
+  const centros_frente = inteira ? [x_centro_frente1, x_centro_frente2] : [x_centro_frente1];
+
+  for (const centro_frente of centros_frente) {
+    if (simples) continue;  // sacola simples não tem furos/fendas/laços
+
+    // FUROS DE CORDÃO (opcional)
+    if (c.cordao) {
+      const y_fr = y_h1 + d_furo;
+      const y_ff = y_h1 - d_furo;
+      for (const sign of [-1, +1]) {
+        const cx = centro_frente + sign * gap_seguro / 2;
+        pdf.circle(tx(cx), ty(y_fr), dr/2, 'S');
+        pdf.circle(tx(cx), ty(y_ff), df/2, 'S');
+      }
+    }
+
+    // FENDAS para alça colada (opcional)
+    if (c.alca) {
+      pdf.setFillColor(COR_CORTE[0], COR_CORTE[1], COR_CORTE[2]);
+      for (const sign of [-1, +1]) {
+        const cx = centro_frente + sign * gap_seguro / 2;
+        pdf.rect(
+          tx(cx - comp_fenda/2),
+          ty(y_h1 + esp_fenda/2),
+          comp_fenda,
+          esp_fenda,
+          'F'
+        );
+      }
+    }
+
+    // FUROS DE LAÇO (opcional)
+    if (c.laco) {
+      const y_laco_c = y_h1 - laco_dist;
+      const offset_laco = laco_gap / 2 + laco_w / 2;
+      const r_laco = laco_w / 2;
+      for (const sign of [-1, +1]) {
+        const cx = centro_frente + sign * offset_laco;
+        pdf.roundedRect(
+          tx(cx - laco_w/2),
+          ty(y_laco_c + laco_h/2),
+          laco_w,
+          laco_h,
+          r_laco,
+          r_laco,
+          'S'
+        );
+      }
+      // QUADRO CYAN (só no modo Faca Gráfica)
+      if (!plotter) {
+      const folga_quadro = 8;
+      const x_quadro_esq = centro_frente - offset_laco - laco_w/2 - folga_quadro;
+      const x_quadro_dir = centro_frente + offset_laco + laco_w/2 + folga_quadro;
+      const y_quadro_topo = y_laco_c + laco_h/2 + folga_quadro;
+      const y_quadro_base = y_laco_c - laco_h/2 - folga_quadro;
+      const quadro_w = x_quadro_dir - x_quadro_esq;
+      const quadro_h = y_quadro_topo - y_quadro_base;
+      pdf.setDrawColor(0, 174, 239);
+      pdf.setLineWidth(0.3);
+      pdf.rect(
+        tx(x_quadro_esq),
+        ty(y_quadro_topo),
+        quadro_w,
+        quadro_h,
+        'S'
+      );
+      pdf.setDrawColor(COR_CORTE[0], COR_CORTE[1], COR_CORTE[2]);
+      pdf.setLineWidth(0.25);
+      } // fim do if (!plotter) do quadro cyan
+    }
+  }
+
+  // VINCOS - cor e estilo variam conforme tipo_saida
+  pdf.setDrawColor(COR_VINCO[0], COR_VINCO[1], COR_VINCO[2]);
+  if (VINCO_TRACEJADO) {
+    pdf.setLineDashPattern([4.8, 2.4], 0);
+  } else {
+    pdf.setLineDashPattern([], 0);  // sólido para plotter
+  }
+  pdf.setLineWidth(0.25);
+
+  // Vincos verticais: presilhas param em y_h3, último (antes da aba) vai à base
+  for (const xv of x_v_list) {
+    if (xv === x_ult_v) {
+      // último vinco (antes da aba) atravessa tudo
+      pdf.line(tx(xv), ty(y_base), tx(xv), ty(y_topo));
+    } else {
+      // vincos das presilhas terminam em y_h3
+      pdf.line(tx(xv), ty(y_h3), tx(xv), ty(y_topo));
+    }
+  }
+
+  // Vincos horizontais (atravessam toda a peça)
+  if (!simples) pdf.line(tx(x_esq), ty(y_h1), tx(x_dir), ty(y_h1));
+  pdf.line(tx(x_esq), ty(y_h2), tx(x_dir), ty(y_h2));
+  pdf.line(tx(x_esq), ty(y_h3), tx(x_dir), ty(y_h3));
+
+  // Diagonais 45° nas meias-laterais (esq e dir) — sempre presentes
+  pdf.line(tx(x_esq), ty(y_h2), tx(x_v_list[0]), ty(y_h3));
+  if (x_v_list.length >= 2) {
+    const x_pen = x_v_list[x_v_list.length - 2];
+    pdf.line(tx(x_ult_v), ty(y_h2), tx(x_pen), ty(y_h3));
+  }
+
+  // Diagonal na ABA DE COLA: parte de D (último vinco vertical em H2)
+  // descendo a 45° até tocar a borda direita do papel
+  const _aba_largura = x_dir - x_ult_v;
+  pdf.line(tx(x_ult_v), ty(y_h2), tx(x_dir), ty(y_h2 - _aba_largura));
+
+  // V-MEIO (só na peça inteira): vinco central da lateral completa
+  // Vai do TOPO até a BASE (atravessa tudo, sem presilha)
+  if (inteira && x_vmeio_var !== null) {
+    pdf.line(tx(x_vmeio_var), ty(y_base), tx(x_vmeio_var), ty(y_topo));
+    // 2 diagonais 45° subindo da base (H3) para H2, convergindo em V-meio
+    pdf.line(tx(x_v_list[1]), ty(y_h3), tx(x_vmeio_var), ty(y_h2));
+    pdf.line(tx(x_vmeio_var), ty(y_h2), tx(x_v_list[2]), ty(y_h3));
+  }
+
+
+  // TEXTO IDENTIFICADOR no rodapé da página
+  pdf.setTextColor(100, 100, 100);
+  pdf.setFontSize(32);
+  pdf.setFont('helvetica', 'normal');
+  // LINHA 1: medidas (fonte grande)
+  const texto1 = `CrieFacas — Tamanho Tridimensional: ${(L/10).toFixed(0)}x${(A/10).toFixed(0)}x${(P/10).toFixed(0)} cm — Tamanho Aberto: ${planoW.toFixed(0)} x ${planoH.toFixed(0)} mm`;
+  const y_texto1 = pagH - margem_min - 12;
+  pdf.setFontSize(32);
+  pdf.text(texto1, pagW / 2, y_texto1, { align: 'center' });
+
+  // LINHA 2: texto legal (fonte pequena)
+  const texto2 = `© 2026 CrieFacas · criefacas.com.br · Uso exclusivo do usuário`;
+  const y_texto2 = pagH - margem_min - 3;
+  pdf.setFontSize(10);
+  pdf.setTextColor(140, 140, 140);
+  pdf.text(texto2, pagW / 2, y_texto2, { align: 'center' });
+
+  // ========================================
+  // LEGENDA — canto superior direito do PDF, dentro da margem
+  // ========================================
+  const x_leg = pagW - 55;       // 55mm da borda direita (largura da legenda ~50mm)
+  const y_leg_base = 8;          // 8mm abaixo do topo do PDF
+
+  pdf.setFontSize(9);
+  pdf.setTextColor(60, 60, 60);
+  pdf.text("LEGENDA", x_leg, y_leg_base, { align: 'left' });
+
+  // Item 1: CORTE (magenta sólido)
+  pdf.setDrawColor(216, 0, 122);
+  pdf.setLineWidth(0.4);
+  pdf.setLineDashPattern([], 0);
+  pdf.line(x_leg, y_leg_base + 6, x_leg + 12, y_leg_base + 6);
+  pdf.setFontSize(8);
+  pdf.text("CORTE (FACA)", x_leg + 15, y_leg_base + 7.5);
+
+  // Item 2: VINCO (magenta tracejado)
+  pdf.setLineDashPattern([1.5, 0.8], 0);
+  pdf.line(x_leg, y_leg_base + 13, x_leg + 12, y_leg_base + 13);
+  pdf.text("VINCO", x_leg + 15, y_leg_base + 14.5);
+
+  // Item 3: CORTE PARCIAL (cyan - marcação madeira)
+  pdf.setDrawColor(0, 174, 239);
+  pdf.setLineDashPattern([], 0);
+  pdf.line(x_leg, y_leg_base + 20, x_leg + 12, y_leg_base + 20);
+  pdf.text("CORTE MADEIRA (SEM LAMINA)", x_leg + 15, y_leg_base + 21.5);
+
+  // Item 4: FENDA (magenta preenchido)
+  pdf.setFillColor(216, 0, 122);
+  pdf.rect(x_leg, y_leg_base + 26.5, 12, 0.8, 'F');
+  pdf.text("FENDA (ALÇA)", x_leg + 15, y_leg_base + 28);
+
+  // Restaurar configs
+  pdf.setDrawColor(COR_CORTE[0], COR_CORTE[1], COR_CORTE[2]);
+  pdf.setLineWidth(0.25);
+  pdf.setLineDashPattern([], 0);
+  pdf.setTextColor(100, 100, 100);
+
+  // Compor nome do arquivo com base nas opções
+  const tipos = [];
+  if (c.cordao) tipos.push('cord');
+  if (c.alca) tipos.push('alca');
+  if (c.laco) tipos.push(`laco${c.laco_h}`);
+  const sufixo = tipos.length ? '_' + tipos.join('-') : '';
+  const tipoSuf = inteira ? '_inteira' : '_meia';
+  const simplSuf = simples ? '_simples' : '';
+  const saidaSuf = plotter ? '_plotter' : '';
+  const nome = `FACA_SEM-REFORCO_${(L/10).toFixed(0)}x${(A/10).toFixed(0)}x${(P/10).toFixed(0)}cm${tipoSuf}${saidaSuf}.pdf`;
+  pdf.save(nome);
+}
+
+// ===== PREVIEW SVG EM TEMPO REAL =====
+function renderPreview(c) {
+  const container = document.getElementById('preview-svg-container');
+  const infoBox = document.getElementById('preview-info');
+  if (!container || !infoBox) return;  // DOM ainda não pronto
+
+  // Se as dimensões mínimas não estão válidas, mostrar placeholder
+  if (!isFinite(c.L) || !isFinite(c.A) || !isFinite(c.P) || c.L < 80 || c.A < 80 || c.P < 30) {
+    container.innerHTML = '<div class="preview-vazio">Preencha as dimensões para visualizar</div>';
+    infoBox.style.display = 'none';
+    return;
+  }
+
+  // Validações que evitam erro de geometria
+  if (c.A <= c.P / 2) {
+    container.innerHTML = '<div class="preview-vazio">Altura precisa ser maior que metade da lateral</div>';
+    infoBox.style.display = 'none';
+    return;
+  }
+
+  const L = c.L, A = c.A, P = c.P;
+  const simples = (c.tipo_sacola === 'simples');
+  const inteira = (c.tipo_peca === 'inteira');
+  const plotter = (c.tipo_saida === 'plotter');
+  const reforco = simples ? 0 : (c.reforco || 20);
+  const aba = c.aba || 20;
+  const folga = 3;
+  const meia = P / 2;
+  const fundo_h = meia + folga;
+  const corpo = A - meia;
+
+  // Dimensões da peça
+  const planoW = inteira ? (meia + L + P + L + meia + aba) : (meia + L + meia + aba);
+  const planoH = reforco + A + fundo_h;
+
+  // Cores conforme modo
+  const CORTE = plotter ? '#FF0000' : '#D8006A';
+  const VINCO = plotter ? '#0000FF' : '#D8006A';
+  const VINCO_DASH = plotter ? '' : '3,2';
+  const CYAN = '#00AEEF';
+
+  // Coordenadas X (referencial: 0 = esquerda)
+  const x_esq = 0;
+  let xs;  // lista de vincos verticais
+  let presilhas;
+  if (inteira) {
+    const va = meia, vb = va + L, vc = vb + P, vd = vc + L, ve = vd + meia;
+    xs = [va, vb, vc, vd, ve];
+    presilhas = [va, vb, vc, vd];
+  } else {
+    const v3 = meia, v2 = v3 + L, v1 = v2 + meia;
+    xs = [v3, v2, v1];
+    presilhas = [v3, v2];
+  }
+  const x_ult = xs[xs.length - 1];
+  const x_dir = planoW;
+
+  // Coordenadas Y (referencial: 0 = base)
+  const y_base = 0;
+  const y_h3 = fundo_h;
+  const y_h2 = y_h3 + meia;
+  const y_h1 = y_h2 + corpo;
+  const y_topo = y_h1 + reforco;
+  const inclinacao = 2 * Math.PI / 180;
+  const y_n = y_topo - Math.tan(inclinacao) * aba;
+
+  // SVG viewBox: usar planoW e planoH com pequena margem
+  const margin = 5;
+  const vbW = planoW + margin * 2;
+  const vbH = planoH + margin * 2;
+
+  // Função para inverter Y (SVG tem Y top-down)
+  const Y = (y) => vbH - margin - y;
+  const X = (x) => margin + x;
+
+  let svg = '<svg viewBox="0 0 ' + vbW + ' ' + vbH + '" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">';
+
+  // CONTORNO (apenas linhas - sem presilhas detalhadas no preview)
+  // Topo, lateral esquerda, base com presilhas simplificadas, lateral direita
+  const sw = Math.max(0.4, vbW / 600);  // largura linha proporcional
+
+  // Topo: esq → último vinco vertical, depois inclinação até x_dir,y_n
+  svg += '<polyline points="';
+  svg += X(x_esq) + ',' + Y(y_base) + ' ';
+  svg += X(x_esq) + ',' + Y(y_topo) + ' ';
+  svg += X(x_ult) + ',' + Y(y_topo) + ' ';
+  svg += X(x_dir) + ',' + Y(y_n) + ' ';
+  svg += X(x_dir) + ',' + Y(y_base) + ' ';
+  // Base com pequenas marcações de presilha (simplificado)
+  for (let i = presilhas.length - 1; i >= 0; i--) {
+    const xp = presilhas[i];
+    svg += X(xp + 3) + ',' + Y(y_base) + ' ';
+    svg += X(xp + 2) + ',' + Y(y_h3 - 1) + ' ';
+    svg += X(xp - 2) + ',' + Y(y_h3 - 1) + ' ';
+    svg += X(xp - 3) + ',' + Y(y_base) + ' ';
+  }
+  svg += X(x_esq) + ',' + Y(y_base);
+  svg += '" fill="none" stroke="' + CORTE + '" stroke-width="' + sw + '" stroke-linejoin="round"/>';
+
+  // VINCOS HORIZONTAIS
+  if (!simples) {
+    svg += '<line x1="' + X(x_esq) + '" y1="' + Y(y_h1) + '" x2="' + X(x_dir) + '" y2="' + Y(y_h1) + '" stroke="' + VINCO + '" stroke-width="' + (sw*0.7) + '" stroke-dasharray="' + VINCO_DASH + '"/>';
+  }
+  svg += '<line x1="' + X(x_esq) + '" y1="' + Y(y_h2) + '" x2="' + X(x_dir) + '" y2="' + Y(y_h2) + '" stroke="' + VINCO + '" stroke-width="' + (sw*0.7) + '" stroke-dasharray="' + VINCO_DASH + '"/>';
+  svg += '<line x1="' + X(x_esq) + '" y1="' + Y(y_h3) + '" x2="' + X(x_dir) + '" y2="' + Y(y_h3) + '" stroke="' + VINCO + '" stroke-width="' + (sw*0.7) + '" stroke-dasharray="' + VINCO_DASH + '"/>';
+
+  // VINCOS VERTICAIS
+  for (const xv of xs) {
+    const yi = (xv === x_ult) ? y_base : y_h3;
+    svg += '<line x1="' + X(xv) + '" y1="' + Y(yi) + '" x2="' + X(xv) + '" y2="' + Y(y_topo) + '" stroke="' + VINCO + '" stroke-width="' + (sw*0.7) + '" stroke-dasharray="' + VINCO_DASH + '"/>';
+  }
+
+  // V-meio (peça inteira)
+  if (inteira) {
+    const x_vmeio = meia + L + P/2;
+    svg += '<line x1="' + X(x_vmeio) + '" y1="' + Y(y_base) + '" x2="' + X(x_vmeio) + '" y2="' + Y(y_topo) + '" stroke="' + VINCO + '" stroke-width="' + (sw*0.9) + '" stroke-dasharray="' + VINCO_DASH + '"/>';
+    svg += '<line x1="' + X(xs[1]) + '" y1="' + Y(y_h3) + '" x2="' + X(x_vmeio) + '" y2="' + Y(y_h2) + '" stroke="' + VINCO + '" stroke-width="' + (sw*0.7) + '" stroke-dasharray="' + VINCO_DASH + '"/>';
+    svg += '<line x1="' + X(x_vmeio) + '" y1="' + Y(y_h2) + '" x2="' + X(xs[2]) + '" y2="' + Y(y_h3) + '" stroke="' + VINCO + '" stroke-width="' + (sw*0.7) + '" stroke-dasharray="' + VINCO_DASH + '"/>';
+  }
+
+  // DIAGONAIS 45° nas meia-laterais
+  svg += '<line x1="' + X(x_esq) + '" y1="' + Y(y_h2) + '" x2="' + X(xs[0]) + '" y2="' + Y(y_h3) + '" stroke="' + VINCO + '" stroke-width="' + (sw*0.7) + '" stroke-dasharray="' + VINCO_DASH + '"/>';
+  if (xs.length >= 2) {
+    const x_pen = xs[xs.length - 2];
+    svg += '<line x1="' + X(x_ult) + '" y1="' + Y(y_h2) + '" x2="' + X(x_pen) + '" y2="' + Y(y_h3) + '" stroke="' + VINCO + '" stroke-width="' + (sw*0.7) + '" stroke-dasharray="' + VINCO_DASH + '"/>';
+  }
+  // Diagonal 45° na aba: de x_ult,y_h2 descendo 45° até borda direita
+  svg += '<line x1="' + X(x_ult) + '" y1="' + Y(y_h2) + '" x2="' + X(x_dir) + '" y2="' + Y(y_h2 - aba) + '" stroke="' + VINCO + '" stroke-width="' + (sw*0.7) + '" stroke-dasharray="' + VINCO_DASH + '"/>';
+
+  // FUROS e FENDAS (se aplicável e não simples)
+  if (!simples) {
+    const centros = inteira ? [(xs[0]+xs[1])/2, (xs[2]+xs[3])/2] : [(xs[0]+xs[1])/2];
+    const d_furo = 13;
+    const gap_seguro = Math.min(c.cordao_gap || 120, L - 20);
+    const r_furo_grande = 3, r_furo_pequeno = 2.5;
+
+    for (const cf of centros) {
+      // Furos cordão
+      if (c.cordao) {
+        for (const sign of [-1, 1]) {
+          const cx = cf + sign * gap_seguro / 2;
+          svg += '<circle cx="' + X(cx) + '" cy="' + Y(y_h1 + d_furo) + '" r="' + r_furo_grande + '" fill="none" stroke="' + CORTE + '" stroke-width="' + sw + '"/>';
+          svg += '<circle cx="' + X(cx) + '" cy="' + Y(y_h1 - d_furo) + '" r="' + r_furo_pequeno + '" fill="none" stroke="' + CORTE + '" stroke-width="' + sw + '"/>';
+        }
+      }
+      // Fendas alça colada
+      if (c.alca) {
+        for (const sign of [-1, 1]) {
+          const cx = cf + sign * gap_seguro / 2;
+          svg += '<rect x="' + X(cx - 13) + '" y="' + Y(y_h1 + 0.5) + '" width="26" height="1" fill="' + CORTE + '"/>';
+        }
+      }
+      // Laços
+      if (c.laco) {
+        const lhh = c.laco_h || 15;
+        const off = 7.5 + 2.5;
+        for (const sign of [-1, 1]) {
+          const cx = cf + sign * off;
+          svg += '<rect x="' + X(cx - 2.5) + '" y="' + Y(y_h1 - 30 + lhh/2) + '" width="5" height="' + lhh + '" rx="2.5" fill="none" stroke="' + CORTE + '" stroke-width="' + sw + '"/>';
+        }
+        // Quadro cyan (só faca)
+        if (!plotter) {
+          const folgaQ = 8;
+          const xqe = cf - off - 2.5 - folgaQ;
+          const xqd = cf + off + 2.5 + folgaQ;
+          const yqt = (y_h1 - 30) + lhh/2 + folgaQ;
+          const yqb = (y_h1 - 30) - lhh/2 - folgaQ;
+          svg += '<rect x="' + X(xqe) + '" y="' + Y(yqt) + '" width="' + (xqd-xqe) + '" height="' + (yqt-yqb) + '" fill="none" stroke="' + CYAN + '" stroke-width="' + (sw*0.8) + '"/>';
+        }
+      }
+    }
+  }
+
+  svg += '</svg>';
+  container.innerHTML = svg;
+
+  // Atualizar info-box
+  infoBox.style.display = 'block';
+  document.getElementById('preview-tamanho').textContent = planoW.toFixed(0) + ' × ' + planoH.toFixed(0) + ' mm';
+  document.getElementById('preview-tipo').textContent = (simples ? 'Simples' : 'Completa') + ' / ' + (inteira ? '1 parte' : '2 partes');
+  document.getElementById('preview-saida').textContent = plotter ? 'Plotter de Recorte' : 'Faca Gráfica';
+}
+
+// ===== INTEGRAÇÃO MEMBERKIT — CONTADOR DE FACAS =====
+// LIMITES POR PLANO
+const LIMITES_PLANO = {
+  'FREE': 2,
+  'INICIANTE': 5,
+  'BASICO': 15,
+  'PRO': 25,
+  'PREMIUM': 50
+};
+
+// Estado do usuário (em produção virá do Memberkit via API)
+const USUARIO = {
+  nome: 'Usuário Demo',
+  plano: 'FREE',
+  facas_usadas_mes: 0
+};
+
+function atualizarBarraContador() {
+  document.getElementById('nome-usuario').textContent = USUARIO.nome;
+  document.getElementById('plano-usuario').textContent = USUARIO.plano;
+  const limite = LIMITES_PLANO[USUARIO.plano];
+  const restantes = limite - USUARIO.facas_usadas_mes;
+  document.getElementById('facas-restantes').textContent = Math.max(0, restantes);
+  document.getElementById('facas-total').textContent = limite;
+
+  if (restantes <= 0) {
+    document.getElementById('aviso-limite').style.display = 'block';
+    btn.disabled = true;
+    btn.textContent = 'Limite atingido — faça upgrade';
+  }
+}
+
+atualizarBarraContador();
+
+btn.addEventListener('click', function() {
+  const limite = LIMITES_PLANO[USUARIO.plano];
+  if (USUARIO.facas_usadas_mes >= limite) {
+    document.getElementById('aviso-limite').style.display = 'block';
+    return;
+  }
+
+  // Gera o PDF
+  gerarPDF();
+
+  // Incrementa contador (em produção: chama API Memberkit para salvar)
+  USUARIO.facas_usadas_mes++;
+  atualizarBarraContador();
+
+  // TODO: integrar com Memberkit API
+  // fetch('/api/memberkit/incrementar-uso', { method: 'POST' });
+});
+</script>
+
+      </div><!-- /.col-form -->
+
+      <div class="col-preview">
+        <div class="preview-header">
+          <h3>Pré-visualização</h3>
+          <span class="ao-vivo">ao vivo</span>
+        </div>
+        <div class="preview-svg" id="preview-svg-container">
+          <div class="preview-vazio">Preencha as dimensões para visualizar</div>
+        </div>
+        <div class="preview-info" id="preview-info" style="display: none;">
+          <div class="item"><span>Tamanho aberto:</span> <b id="preview-tamanho">— × —</b></div>
+          <div class="item"><span>Tipo:</span> <b id="preview-tipo">—</b></div>
+          <div class="item"><span>Saída:</span> <b id="preview-saida">—</b></div>
+        </div>
+      </div><!-- /.col-preview -->
+
+    </div><!-- /.layout-2col -->
+  </div><!-- /.container -->
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CrieFacas — Facas Gráficas Online</title>
+<meta name="description" content="Crie facas gráficas (dielines) para sacolas, caixas e papelaria em segundos. Direto no navegador, sem instalar nada.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #faf9f5;
+    --surface: #ffffff;
+    --section-bg: #f5f4ed;
+    --border: rgba(0,0,0,0.12);
+    --border-strong: rgba(0,0,0,0.25);
+    --text: #1f1f1d;
+    --text-secondary: #5f5e5a;
+    --text-tertiary: #888780;
+    --accent: #D85A30;
+    --accent-hover: #993C1D;
+    --accent-bg: rgba(216, 90, 48, 0.1);
+    --info-bg: #E6F1FB;
+    --info-text: #0C447C;
+    --success-bg: #EAF3DE;
+    --success-text: #3B6D11;
+    --premium: #BA7517;
+    --premium-bg: #FAEEDA;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --surface: #25251f;
+      --section-bg: #2c2c26;
+      --border: rgba(255,255,255,0.15);
+      --border-strong: rgba(255,255,255,0.3);
+      --text: #f5f4ed;
+      --text-secondary: #b4b2a9;
+      --text-tertiary: #888780;
+      --info-bg: #042C53;
+      --info-text: #85B7EB;
+      --success-bg: #173404;
+      --success-text: #C0DD97;
+      --premium-bg: #412402;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 0.5px solid var(--border);
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .logo b { color: var(--accent); font-weight: 500; }
+  nav {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  nav a {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  nav a:hover { color: var(--text); }
+  .btn {
+    display: inline-block;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-primary:hover {
+    background: var(--accent-hover);
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 0.5px solid var(--border-strong);
+  }
+  .btn-secondary:hover {
+    background: var(--section-bg);
+  }
+  /* HERO */
+  .hero {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 3rem;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: 44px;
+    font-weight: 500;
+    margin: 0 0 16px;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+  }
+  .hero .subtitle {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin: 0 auto 2rem;
+    max-width: 600px;
+    line-height: 1.5;
+  }
+  .hero-ctas {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .hero-ctas .btn { padding: 12px 24px; font-size: 15px; }
+  /* BENEFÍCIOS */
+  .beneficios {
+    background: var(--section-bg);
+    padding: 3rem 1.5rem;
+  }
+  .beneficios-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+  }
+  .beneficio {
+    text-align: center;
+  }
+  .beneficio i {
+    font-size: 32px;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: block;
+  }
+  .beneficio h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 6px;
+  }
+  .beneficio p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+  }
+  /* CATEGORIAS */
+  .categorias {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+  }
+  .section-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .section-header h2 {
+    font-size: 30px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+  }
+  .section-header p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .cat-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.15s;
+  }
+  .cat-card:hover { border-color: var(--border-strong); }
+  .cat-card .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .cat-card .icon-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--accent-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: var(--accent);
+  }
+  .cat-card.disponivel .badge {
+    background: var(--success-bg);
+    color: var(--success-text);
+  }
+  .cat-card.em-breve {
+    opacity: 0.65;
+  }
+  .cat-card.em-breve .icon-wrap {
+    background: var(--section-bg);
+    color: var(--text-tertiary);
+  }
+  .cat-card.em-breve .badge {
+    background: var(--section-bg);
+    color: var(--text-tertiary);
+  }
+  .badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .cat-card h3 {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0 0 6px;
+  }
+  .cat-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0 0 16px;
+    line-height: 1.5;
+  }
+  .cat-card a.btn {
+    width: 100%;
+    text-align: center;
+  }
+  /* PLANOS */
+  .planos {
+    background: var(--section-bg);
+    padding: 4rem 1.5rem;
+  }
+  .planos-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .plano-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-top: 2rem;
+  }
+  .plano {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .plano.destaque {
+    border: 2px solid var(--accent);
+  }
+  .plano.destaque .selo {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .plano h4 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin: 0 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .plano .preco {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+  .plano .preco .cifra {
+    font-size: 16px;
+    vertical-align: top;
+    color: var(--text-secondary);
+  }
+  .plano .preco .periodo {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+  .plano .preco-gratis {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: var(--success-text);
+    letter-spacing: -0.02em;
+  }
+  .plano .qtd {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .plano ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+    flex: 1;
+    font-size: 13px;
+  }
+  .plano ul li {
+    padding: 5px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: var(--text-secondary);
+  }
+  .plano ul li i {
+    color: var(--success-text);
+    font-size: 14px;
+    margin-top: 3px;
+  }
+  .plano .extra {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-bottom: 12px;
+    text-align: center;
+    padding: 6px;
+    background: var(--section-bg);
+    border-radius: 6px;
+  }
+  /* FOOTER */
+  footer {
+    background: var(--surface);
+    border-top: 0.5px solid var(--border);
+    padding: 2rem 1.5rem;
+    margin-top: 2rem;
+  }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text-tertiary);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 32px; }
+    .hero .subtitle { font-size: 16px; }
+    .section-header h2 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">crie<b>facas</b></a>
+    <nav>
+      <a href="#produtos">Produtos</a>
+      <a href="#planos">Planos</a>
+      <a href="#como-usar">Como usar</a>
+      <a href="/login" class="btn btn-secondary">Entrar</a>
+      <a href="/cadastro" class="btn btn-primary">Criar conta grátis</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Facas gráficas em segundos</h1>
+  <p class="subtitle">
+    Gere planificações vetoriais para sacolas, caixas e papelaria.
+    Direto no navegador, sem instalar nada. Pronto para sua impressora cortar.
+  </p>
+  <div class="hero-ctas">
+    <a href="/cadastro" class="btn btn-primary">
+      <i class="ti ti-bolt" style="vertical-align: -2px; margin-right: 6px;"></i>
+      Começar grátis — 2 facas/mês
+    </a>
+    <a href="#produtos" class="btn btn-secondary">Ver demonstração</a>
+  </div>
+</section>
+
+<section class="beneficios">
+  <div class="beneficios-inner">
+    <div class="beneficio">
+      <i class="ti ti-bolt"></i>
+      <h3>Geração instantânea</h3>
+      <p>PDF vetorial pronto em segundos. Insira as medidas e baixe.</p>
+    </div>
+    <div class="beneficio">
+      <i class="ti ti-vector-triangle"></i>
+      <h3>Pronto para gráfica</h3>
+      <p>Magenta CutContour, vincos tracejados, fendas sólidas. Padrão indústria.</p>
+    </div>
+    <div class="beneficio">
+      <i class="ti ti-adjustments"></i>
+      <h3>Totalmente configurável</h3>
+      <p>Aba de cola, reforço, alça de cordão, laço, alça colada. Você escolhe.</p>
+    </div>
+    <div class="beneficio">
+      <i class="ti ti-cloud-download"></i>
+      <h3>100% no navegador</h3>
+      <p>Sem instalação, sem login complicado. Acesse de qualquer lugar.</p>
+    </div>
+  </div>
+</section>
+
+<section class="categorias" id="produtos">
+  <div class="section-header">
+    <h2>Escolha o produto</h2>
+    <p>Calculadoras especializadas para cada tipo de embalagem</p>
+  </div>
+  <div class="cat-grid">
+
+    <div class="cat-card disponivel">
+      <div class="top">
+        <div class="icon-wrap"><i class="ti ti-shopping-bag"></i></div>
+        <span class="badge">Disponível</span>
+      </div>
+      <h3>Sacolas</h3>
+      <p>Sacolas de papel com alça de cordão, alça colada ou laço. Modelos meia (2 partes) ou inteira.</p>
+      <a href="/sacolas" class="btn btn-primary">Ver tipos de sacolas</a>
+    </div>
+
+    <div class="cat-card em-breve">
+      <div class="top">
+        <div class="icon-wrap"><i class="ti ti-box"></i></div>
+        <span class="badge">Em breve</span>
+      </div>
+      <h3>Caixas</h3>
+      <p>Caixinhas, embalagens, displays e expositores. Diversos modelos planificados.</p>
+      <button class="btn btn-secondary" disabled style="opacity: 0.6; cursor: not-allowed;">Em desenvolvimento</button>
+    </div>
+
+    <div class="cat-card em-breve">
+      <div class="top">
+        <div class="icon-wrap"><i class="ti ti-file"></i></div>
+        <span class="badge">Em breve</span>
+      </div>
+      <h3>Papelaria</h3>
+      <p>Envelopes, pastas, cartões e fichários. Modelos clássicos e personalizados.</p>
+      <button class="btn btn-secondary" disabled style="opacity: 0.6; cursor: not-allowed;">Em desenvolvimento</button>
+    </div>
+
+  </div>
+</section>
+
+<section class="planos" id="planos">
+  <div class="planos-inner">
+    <div class="section-header">
+      <h2>Escolha seu plano</h2>
+      <p>Quanto mais você usa, mais barata fica cada faca</p>
+    </div>
+
+    <div class="plano-grid">
+
+      <div class="plano">
+        <h4>Grátis</h4>
+        <div class="preco-gratis">R$ 0</div>
+        <div class="qtd">2 facas / mês</div>
+        <ul>
+          <li><i class="ti ti-check"></i> Sem cartão de crédito</li>
+          <li><i class="ti ti-check"></i> PDF vetorial completo</li>
+          <li><i class="ti ti-check"></i> Todas as opções</li>
+          <li><i class="ti ti-x" style="color: var(--text-tertiary)"></i><span style="color: var(--text-tertiary)">Sem facas avulsas</span></li>
+        </ul>
+        <a href="/cadastro" class="btn btn-secondary" style="width: 100%; text-align: center;">Começar grátis</a>
+      </div>
+
+      <div class="plano">
+        <h4>Iniciante</h4>
+        <div class="preco"><span class="cifra">R$</span> 19,90<span class="periodo">/mês</span></div>
+        <div class="qtd">5 facas / mês</div>
+        <ul>
+          <li><i class="ti ti-check"></i> Tudo do Grátis</li>
+          <li><i class="ti ti-check"></i> Suporte por e-mail</li>
+        </ul>
+        <div class="extra">Faca avulsa: R$ 9,90</div>
+        <a href="https://hotmart.com/pt-br/marketplace/produtos/criefacas-iniciante" class="btn btn-secondary" style="width: 100%; text-align: center;">Assinar</a>
+      </div>
+
+      <div class="plano destaque">
+        <span class="selo">Mais popular</span>
+        <h4>Básico</h4>
+        <div class="preco"><span class="cifra">R$</span> 39,90<span class="periodo">/mês</span></div>
+        <div class="qtd">15 facas / mês</div>
+        <ul>
+          <li><i class="ti ti-check"></i> Tudo do Iniciante</li>
+          <li><i class="ti ti-check"></i> Histórico ilimitado</li>
+        </ul>
+        <div class="extra">Faca avulsa: R$ 7,90</div>
+        <a href="https://hotmart.com/pt-br/marketplace/produtos/criefacas-basico" class="btn btn-primary" style="width: 100%; text-align: center;">Assinar Básico</a>
+      </div>
+
+      <div class="plano">
+        <h4>Pro</h4>
+        <div class="preco"><span class="cifra">R$</span> 59,90<span class="periodo">/mês</span></div>
+        <div class="qtd">25 facas / mês</div>
+        <ul>
+          <li><i class="ti ti-check"></i> Tudo do Básico</li>
+          <li><i class="ti ti-check"></i> Suporte prioritário</li>
+        </ul>
+        <div class="extra">Faca avulsa: R$ 4,90</div>
+        <a href="https://hotmart.com/pt-br/marketplace/produtos/criefacas-pro" class="btn btn-secondary" style="width: 100%; text-align: center;">Assinar Pro</a>
+      </div>
+
+      <div class="plano">
+        <h4>Premium</h4>
+        <div class="preco"><span class="cifra">R$</span> 99,90<span class="periodo">/mês</span></div>
+        <div class="qtd">50 facas / mês</div>
+        <ul>
+          <li><i class="ti ti-check"></i> Tudo do Pro</li>
+          <li><i class="ti ti-check"></i> Suporte WhatsApp</li>
+        </ul>
+        <div class="extra">Faca avulsa: R$ 3,90</div>
+        <a href="https://hotmart.com/pt-br/marketplace/produtos/criefacas-premium" class="btn btn-secondary" style="width: 100%; text-align: center;">Assinar Premium</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>© 2026 CrieFacas — Plug Impressos · Goiânia, GO</div>
+    <div style="display: flex; gap: 16px;">
+      <a href="/termos" style="color: var(--text-tertiary); text-decoration: none;">Termos</a>
+      <a href="/privacidade" style="color: var(--text-tertiary); text-decoration: none;">Privacidade</a>
+      <a href="/contato" style="color: var(--text-tertiary); text-decoration: none;">Contato</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

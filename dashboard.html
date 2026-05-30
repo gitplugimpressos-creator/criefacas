@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu painel — CrieFacas</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #faf9f5;
+    --surface: #ffffff;
+    --section-bg: #f5f4ed;
+    --border: rgba(0,0,0,0.12);
+    --border-strong: rgba(0,0,0,0.25);
+    --text: #1f1f1d;
+    --text-secondary: #5f5e5a;
+    --text-tertiary: #888780;
+    --accent: #D85A30;
+    --accent-hover: #993C1D;
+    --accent-bg: rgba(216, 90, 48, 0.1);
+    --info-bg: #E6F1FB;
+    --info-text: #0C447C;
+    --success-bg: #EAF3DE;
+    --success-text: #3B6D11;
+    --warning-bg: #FAEEDA;
+    --warning-text: #854F0B;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --surface: #25251f;
+      --section-bg: #2c2c26;
+      --border: rgba(255,255,255,0.15);
+      --border-strong: rgba(255,255,255,0.3);
+      --text: #f5f4ed;
+      --text-secondary: #b4b2a9;
+      --text-tertiary: #888780;
+      --info-bg: #042C53;
+      --info-text: #85B7EB;
+      --success-bg: #173404;
+      --success-text: #C0DD97;
+      --warning-bg: #412402;
+      --warning-text: #EF9F27;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+  }
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 0.5px solid var(--border);
+    padding: 14px 0;
+  }
+  .header-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-size: 32px;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .logo b { color: var(--accent); font-weight: 500; }
+  .user-menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+  }
+  .user-menu .nome {
+    color: var(--text-secondary);
+  }
+  .badge-plano {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: var(--accent-bg);
+    color: var(--accent);
+  }
+  .btn-sair {
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-family: inherit;
+  }
+  .btn-sair:hover { background: var(--section-bg); color: var(--text); }
+
+  /* CONTAINER */
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+  h1 {
+    font-size: 26px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+  }
+  .saudacao {
+    color: var(--text-secondary);
+    margin: 0 0 2rem;
+    font-size: 15px;
+  }
+
+  /* CARDS DE ESTATÍSTICA */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+  }
+  .stat-card.destaque {
+    background: var(--accent-bg);
+    border-color: var(--accent);
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+  .stat-value {
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .stat-value .small {
+    font-size: 16px;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+  .stat-sub {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  /* BARRA DE PROGRESSO */
+  .barra-progresso {
+    background: var(--section-bg);
+    border-radius: 6px;
+    height: 8px;
+    overflow: hidden;
+    margin-top: 12px;
+  }
+  .barra-progresso-fill {
+    background: var(--accent);
+    height: 100%;
+    transition: width 0.3s;
+  }
+  .barra-progresso-fill.cheio {
+    background: var(--warning-text);
+  }
+
+  /* SEÇÃO */
+  .section {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .section h2 {
+    font-size: 17px;
+    font-weight: 500;
+    margin: 0 0 1rem;
+  }
+
+  /* BOTÕES */
+  .btn {
+    display: inline-block;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+  }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 0.5px solid var(--border-strong);
+  }
+  .btn-secondary:hover { background: var(--section-bg); }
+
+  /* AÇÕES RÁPIDAS */
+  .acoes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+  .acao-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+    color: var(--text);
+    display: block;
+  }
+  .acao-card:hover {
+    border-color: var(--accent);
+  }
+  .acao-card i {
+    font-size: 24px;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: block;
+  }
+  .acao-card .titulo {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .acao-card .desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .acao-card.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .acao-card.disabled:hover { border-color: var(--border); }
+
+  /* HISTÓRICO */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  table th, table td {
+    padding: 10px 8px;
+    text-align: left;
+    border-bottom: 0.5px solid var(--border);
+  }
+  table th {
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  table td.acao {
+    text-align: right;
+  }
+  table td.acao a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .vazio {
+    text-align: center;
+    color: var(--text-tertiary);
+    padding: 2rem 0;
+    font-size: 14px;
+  }
+
+  /* CTA UPGRADE */
+  .cta-upgrade {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .cta-upgrade h3 {
+    font-size: 17px;
+    font-weight: 500;
+    margin: 0 0 4px;
+  }
+  .cta-upgrade p {
+    font-size: 13px;
+    margin: 0;
+    opacity: 0.9;
+  }
+  .cta-upgrade a {
+    background: white;
+    color: var(--accent);
+    padding: 9px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 22px; }
+    .stat-value { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">crie<b>facas</b></a>
+    <div class="user-menu">
+      <span class="nome" id="nome-usuario">Carregando...</span>
+      <span class="badge-plano" id="plano-usuario">FREE</span>
+      <button class="btn-sair" onclick="sair()">Sair</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <h1 id="saudacao-titulo">Olá!</h1>
+  <p class="saudacao">Aqui está um resumo da sua conta</p>
+
+  <!-- CARDS DE ESTATÍSTICA -->
+  <div class="stats-grid">
+    <div class="stat-card destaque">
+      <div class="stat-label">Facas restantes</div>
+      <div class="stat-value"><span id="facas-restantes">2</span><span class="small"> / <span id="facas-total">2</span></span></div>
+      <div class="stat-sub">Renovam em <span id="dia-renova">1º do próximo mês</span></div>
+      <div class="barra-progresso">
+        <div class="barra-progresso-fill" id="barra-fill" style="width: 100%;"></div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Total geradas este mês</div>
+      <div class="stat-value" id="facas-usadas-mes">0</div>
+      <div class="stat-sub">Acumulado total: <span id="facas-total-acumulado">0</span></div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Plano atual</div>
+      <div class="stat-value" style="font-size: 22px;" id="nome-plano">Grátis</div>
+      <div class="stat-sub" id="proxima-cobranca">Sem cobrança recorrente</div>
+    </div>
+  </div>
+
+  <!-- CTA UPGRADE (visível para FREE e quando atingir limite) -->
+  <div class="cta-upgrade" id="cta-upgrade" style="display: none;">
+    <div>
+      <h3>Precisa de mais facas?</h3>
+      <p>Faça upgrade para gerar 5, 15, 25 ou 50 facas por mês com desconto progressivo.</p>
+    </div>
+    <a href="/#planos">Ver planos →</a>
+  </div>
+
+  <!-- AÇÕES RÁPIDAS -->
+  <h2 style="font-size: 16px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin: 2rem 0 1rem;">Criar nova faca</h2>
+  <div class="acoes">
+    <a href="/gerador" class="acao-card">
+      <i class="ti ti-shopping-bag"></i>
+      <div class="titulo">Sacolas</div>
+      <div class="desc">Sacolas de papel com alça de cordão, alça colada ou laço</div>
+    </a>
+
+    <div class="acao-card disabled">
+      <i class="ti ti-box"></i>
+      <div class="titulo">Caixas</div>
+      <div class="desc">Em breve — caixinhas, embalagens e displays</div>
+    </div>
+
+    <div class="acao-card disabled">
+      <i class="ti ti-file"></i>
+      <div class="titulo">Papelaria</div>
+      <div class="desc">Em breve — envelopes, pastas e cartões</div>
+    </div>
+  </div>
+
+  <!-- HISTÓRICO -->
+  <div class="section">
+    <h2>Últimas facas geradas</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Modelo</th>
+          <th>Tamanho</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="historico-tbody">
+        <tr>
+          <td colspan="4" class="vazio">Você ainda não gerou nenhuma faca. <a href="/gerador" style="color: var(--accent);">Criar a primeira</a>.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+// ===== DADOS DO USUÁRIO (em produção: Memberkit API) =====
+const LIMITES_PLANO = {
+  'FREE': 2,
+  'INICIANTE': 5,
+  'BASICO': 15,
+  'PRO': 25,
+  'PREMIUM': 50
+};
+
+const NOMES_PLANO = {
+  'FREE': 'Grátis',
+  'INICIANTE': 'Iniciante',
+  'BASICO': 'Básico',
+  'PRO': 'Pro',
+  'PREMIUM': 'Premium'
+};
+
+// Simulação — em produção virá do Memberkit
+const USUARIO = {
+  nome: 'João da Silva',
+  plano: 'FREE',
+  facas_usadas_mes: 0,
+  facas_total_acumulado: 0,
+  proxima_cobranca: null,
+  historico: []
+  // Exemplo com histórico:
+  // historico: [
+  //   { data: '28/05/2026', modelo: 'Sacola Meia', tamanho: '34x24x10 cm', url: '/pdf/abc.pdf' },
+  // ]
+};
+
+function renderizarDashboard() {
+  document.getElementById('saudacao-titulo').textContent = `Olá, ${USUARIO.nome.split(' ')[0]}!`;
+  document.getElementById('nome-usuario').textContent = USUARIO.nome;
+  document.getElementById('plano-usuario').textContent = USUARIO.plano;
+
+  const limite = LIMITES_PLANO[USUARIO.plano];
+  const restantes = Math.max(0, limite - USUARIO.facas_usadas_mes);
+  document.getElementById('facas-restantes').textContent = restantes;
+  document.getElementById('facas-total').textContent = limite;
+  document.getElementById('facas-usadas-mes').textContent = USUARIO.facas_usadas_mes;
+  document.getElementById('facas-total-acumulado').textContent = USUARIO.facas_total_acumulado;
+  document.getElementById('nome-plano').textContent = NOMES_PLANO[USUARIO.plano];
+
+  if (USUARIO.proxima_cobranca) {
+    document.getElementById('proxima-cobranca').textContent = `Próxima cobrança: ${USUARIO.proxima_cobranca}`;
+  }
+
+  // Barra de progresso
+  const pct = Math.min(100, (USUARIO.facas_usadas_mes / limite) * 100);
+  const fill = document.getElementById('barra-fill');
+  fill.style.width = pct + '%';
+  if (pct >= 100) fill.classList.add('cheio');
+
+  // CTA de upgrade aparece para FREE ou quando atingir limite
+  if (USUARIO.plano === 'FREE' || restantes === 0) {
+    document.getElementById('cta-upgrade').style.display = 'flex';
+  }
+
+  // Histórico
+  if (USUARIO.historico.length > 0) {
+    const tbody = document.getElementById('historico-tbody');
+    tbody.innerHTML = USUARIO.historico.map(h => `
+      <tr>
+        <td>${h.data}</td>
+        <td>${h.modelo}</td>
+        <td>${h.tamanho}</td>
+        <td class="acao"><a href="${h.url}">Baixar novamente</a></td>
+      </tr>
+    `).join('');
+  }
+}
+
+function sair() {
+  // TODO: chamar Memberkit logout
+  // localStorage.removeItem('memberkit_token');
+  if (confirm('Tem certeza que deseja sair?')) {
+    window.location.href = '/login';
+  }
+}
+
+// TODO: integrar com Memberkit
+/*
+async function carregarUsuario() {
+  const token = localStorage.getItem('memberkit_token');
+  if (!token) { window.location.href = '/login'; return; }
+
+  const resp = await fetch('https://api.memberkit.com.br/v1/me', {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  if (!resp.ok) { window.location.href = '/login'; return; }
+
+  const dados = await resp.json();
+  USUARIO.nome = dados.name;
+  USUARIO.plano = dados.level.toUpperCase();
+  USUARIO.facas_usadas_mes = dados.metadata.facas_mes || 0;
+  USUARIO.facas_total_acumulado = dados.metadata.facas_total || 0;
+  USUARIO.proxima_cobranca = dados.next_billing_date;
+  USUARIO.historico = dados.metadata.historico || [];
+
+  renderizarDashboard();
+}
+carregarUsuario();
+*/
+
+// Simulação (remover na produção)
+renderizarDashboard();
+</script>
+
+</body>
+</html>

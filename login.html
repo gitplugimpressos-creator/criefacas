@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar — CrieFacas</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #faf9f5;
+    --surface: #ffffff;
+    --section-bg: #f5f4ed;
+    --border: rgba(0,0,0,0.12);
+    --border-strong: rgba(0,0,0,0.25);
+    --text: #1f1f1d;
+    --text-secondary: #5f5e5a;
+    --text-tertiary: #888780;
+    --accent: #D85A30;
+    --accent-hover: #993C1D;
+    --error-bg: #FCEBEB;
+    --error-text: #791F1F;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --surface: #25251f;
+      --section-bg: #2c2c26;
+      --border: rgba(255,255,255,0.15);
+      --border-strong: rgba(255,255,255,0.3);
+      --text: #f5f4ed;
+      --text-secondary: #b4b2a9;
+      --text-tertiary: #888780;
+      --error-bg: #501313;
+      --error-text: #F09595;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .container {
+    max-width: 420px;
+    width: 100%;
+  }
+  .logo {
+    display: block;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    color: var(--text);
+    margin-bottom: 2rem;
+  }
+  .logo b { color: var(--accent); font-weight: 500; }
+  .card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0 0 6px;
+    text-align: center;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0 0 1.75rem;
+    text-align: center;
+  }
+  .field { margin-bottom: 1rem; }
+  label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  input {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    border: 0.5px solid var(--border-strong);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 15px;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(216, 90, 48, 0.15);
+  }
+  .esqueci {
+    text-align: right;
+    margin-bottom: 1.5rem;
+  }
+  .esqueci a {
+    font-size: 13px;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .esqueci a:hover { text-decoration: underline; }
+  button.btn-primary {
+    width: 100%;
+    height: 44px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  button.btn-primary:hover { background: var(--accent-hover); }
+  .separator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 1.5rem 0;
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+  .separator::before, .separator::after {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: var(--border);
+  }
+  .footer-link {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+  .footer-link a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .footer-link a:hover { text-decoration: underline; }
+  .alert {
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 1rem;
+    display: none;
+  }
+  .alert.show { display: block; }
+  .alert-error {
+    background: var(--error-bg);
+    color: var(--error-text);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a href="/" class="logo">crie<b>facas</b></a>
+
+  <div class="card">
+    <h1>Bem-vindo de volta</h1>
+    <p class="subtitle">Entre na sua conta para continuar</p>
+
+    <div class="alert alert-error" id="alert-erro">
+      <i class="ti ti-alert-circle" style="vertical-align: -2px; margin-right: 4px;"></i>
+      <span id="alert-erro-msg">E-mail ou senha incorretos.</span>
+    </div>
+
+    <form onsubmit="event.preventDefault(); entrar();">
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" required placeholder="seu@email.com" autocomplete="email">
+      </div>
+
+      <div class="field">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" required placeholder="Sua senha" autocomplete="current-password">
+      </div>
+
+      <div class="esqueci">
+        <a href="/esqueci-senha">Esqueci minha senha</a>
+      </div>
+
+      <button type="submit" class="btn-primary">Entrar</button>
+    </form>
+
+    <div class="separator">ou</div>
+
+    <div class="footer-link">
+      Ainda não tem conta? <a href="/cadastro">Criar conta grátis</a>
+    </div>
+  </div>
+</div>
+
+<script>
+async function entrar() {
+  document.getElementById('alert-erro').classList.remove('show');
+
+  const email = document.getElementById('email').value.trim().toLowerCase();
+  const senha = document.getElementById('senha').value;
+
+  // TODO: integrar com Memberkit
+  /*
+  const resp = await fetch('https://api.memberkit.com.br/v1/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password: senha })
+  });
+
+  if (!resp.ok) {
+    document.getElementById('alert-erro-msg').textContent = 'E-mail ou senha incorretos.';
+    document.getElementById('alert-erro').classList.add('show');
+    return;
+  }
+
+  const { token } = await resp.json();
+  localStorage.setItem('memberkit_token', token);
+  window.location.href = '/dashboard';
+  */
+
+  // Simulação
+  alert('Login simulado! Em produção, redireciona para /dashboard');
+}
+</script>
+
+</body>
+</html>
