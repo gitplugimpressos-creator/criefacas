@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartucho Colagem Lateral — CrieFacas</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #faf9f5;
+    --surface: #ffffff;
+    --border: rgba(0,0,0,0.12);
+    --border-strong: rgba(0,0,0,0.25);
+    --text: #1f1f1d;
+    --text-secondary: #5f5e5a;
+    --text-tertiary: #888780;
+    --accent: #D85A30;
+    --accent-hover: #993C1D;
+    --info-bg: #E6F1FB;
+    --info-text: #0C447C;
+    --error-bg: #FCEBEB;
+    --error-text: #791F1F;
+    --section-bg: #f5f4ed;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --surface: #25251f;
+      --border: rgba(255,255,255,0.15);
+      --border-strong: rgba(255,255,255,0.3);
+      --text: #f5f4ed;
+      --text-secondary: #b4b2a9;
+      --text-tertiary: #888780;
+      --info-bg: #042C53;
+      --info-text: #85B7EB;
+      --error-bg: #501313;
+      --error-text: #F09595;
+      --section-bg: #2c2c26;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+  }
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 0.5px solid var(--border);
+    padding: 14px 0;
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-size: 32px;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .logo b { color: var(--accent); font-weight: 500; }
+  nav { display: flex; gap: 16px; align-items: center; font-size: 14px; }
+  nav a { color: var(--text-secondary); text-decoration: none; }
+  nav a:hover { color: var(--text); }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+  /* BREADCRUMB */
+  .breadcrumb {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-bottom: 1.5rem;
+  }
+  .breadcrumb a {
+    color: var(--text-tertiary);
+    text-decoration: none;
+  }
+  .breadcrumb a:hover { color: var(--text-secondary); }
+  .breadcrumb b { color: var(--text); font-weight: 500; }
+  .layout-2col {
+    display: grid;
+    grid-template-columns: minmax(380px, 480px) 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .col-form {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
+  }
+  .col-preview {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    position: sticky;
+    top: 1rem;
+  }
+  .preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .preview-header h3 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .preview-header .ao-vivo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+  }
+  .ao-vivo::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #21BA45;
+    display: inline-block;
+  }
+  .preview-svg {
+    background: var(--section-bg);
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .preview-svg svg {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+  }
+  .preview-info {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: var(--section-bg);
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .preview-info .item {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+  }
+  .preview-info .item b {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .preview-vazio {
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    padding: 60px 20px;
+  }
+  @media (max-width: 900px) {
+    .layout-2col { grid-template-columns: 1fr; }
+    .col-preview { position: static; }
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0 0 4px;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0 0 2rem;
+  }
+  .section { margin-bottom: 1.75rem; }
+  .section-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+  }
+  .field { margin-bottom: 1rem; }
+  label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  input[type="number"], select {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    border: 0.5px solid var(--border-strong);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.15s;
+  }
+  input[type="number"]:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(216, 90, 48, 0.15);
+  }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  @media (max-width: 480px) {
+    .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  }
+  .advanced-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    user-select: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--section-bg);
+    transition: background 0.15s;
+  }
+  .advanced-toggle:hover { background: var(--border); }
+  .advanced-toggle i {
+    transition: transform 0.2s;
+  }
+  .advanced-toggle.open i { transform: rotate(90deg); }
+  .advanced-content {
+    display: none;
+    margin-top: 12px;
+    padding: 16px;
+    background: var(--section-bg);
+    border-radius: 8px;
+  }
+  .advanced-content.open { display: block; }
+  .info-box {
+    background: var(--info-bg);
+    color: var(--info-text);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 1.25rem 0;
+    font-size: 13px;
+  }
+  .info-box .label { opacity: 0.75; margin-bottom: 2px; }
+  .info-box .value { font-weight: 500; font-size: 15px; }
+  .error-box {
+    background: var(--error-bg);
+    color: var(--error-text);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 1.25rem 0;
+    font-size: 13px;
+    display: none;
+  }
+  .error-box.show { display: block; }
+  button.primary {
+    width: 100%;
+    height: 44px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-family: inherit;
+  }
+  button.primary:hover { background: var(--accent-hover); }
+  button.primary:active { transform: scale(0.98); }
+  .specs {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 0.5px solid var(--border);
+    font-size: 12px;
+    color: var(--text-tertiary);
+    line-height: 1.7;
+  }
+  .specs strong {
+    color: var(--text-secondary);
+    font-weight: 500;
+    display: block;
+    margin-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">crie<b>facas</b></a>
+    <nav>
+      <a href="/">Início</a>
+      <a href="/dashboard.html">Meu painel</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="breadcrumb">
+    <a href="/">Início</a> ›
+    <a href="/cartuchos.html">Cartuchos</a> ›
+    <b>Cartucho Colagem Lateral</b>
+  </div>
+
+    <div class="layout-2col">
+      <div class="col-form">
+        <h1>Cartucho Colagem Lateral</h1>
+        <p class="subtitle">Cartucho com colagem lateral, travas de fechamento em cima e embaixo, e abas laterais para travamento da caixa.</p>
+
+        <div class="section">
+          <div class="section-title">Dimensões do cartucho</div>
+          <div class="grid-3">
+            <div class="field">
+              <label for="comprimento">Comprimento (mm)</label>
+              <input type="number" id="comprimento" value="60" min="15" max="300" step="1">
+            </div>
+            <div class="field">
+              <label for="largura">Largura (mm)</label>
+              <input type="number" id="largura" value="30" min="15" max="300" step="1">
+            </div>
+            <div class="field">
+              <label for="altura">Altura (mm)</label>
+              <input type="number" id="altura" value="80" min="30" max="300" step="1">
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Tipo de saída</div>
+          <div class="field">
+            <select id="tipo_saida">
+              <option value="faca">Faca Gráfica (clicheria — magenta CutContour)</option>
+              <option value="plotter">Plotter de Recorte (Silhouette / Cricut — vermelho + azul)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="advanced-toggle" id="adv-toggle">
+            <i class="ti ti-chevron-right"></i>
+            <span>Opções avançadas</span>
+          </div>
+          <div class="advanced-content" id="adv-content">
+            <div class="grid-2">
+              <div class="field">
+                <label for="aba_cola">Largura da Aba de Cola (mm)</label>
+                <input type="number" id="aba_cola" value="15" min="10" max="20" step="1">
+              </div>
+              <div class="field">
+                <label for="trava_altura">Altura da Trava (mm)</label>
+                <input type="number" id="trava_altura" value="15" min="8" max="30" step="1">
+              </div>
+              <div class="field">
+                <label for="l_largura">Largura do L da Trava (mm)</label>
+                <input type="number" id="l_largura" value="5" min="3" max="10" step="0.5">
+              </div>
+              <div class="field">
+                <label for="l_profundidade">Profundidade do L (mm)</label>
+                <input type="number" id="l_profundidade" value="1" min="1" max="3" step="0.5">
+              </div>
+              <div class="field">
+                <label for="vinco_delta">Deslocamento do Vinco (mm)</label>
+                <input type="number" id="vinco_delta" value="0.5" min="0.5" max="1.5" step="0.1">
+              </div>
+              <div class="field">
+                <label for="raio_trava">Raio da Aba de Cola (mm)</label>
+                <input type="number" id="raio_trava" value="2" min="1" max="5" step="0.5">
+              </div>
+              <div class="field">
+                <label for="raio_aba">Raio das Abas Internas (mm)</label>
+                <input type="number" id="raio_aba" value="2" min="0" max="5" step="0.5">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-box" id="info">
+          <div class="label">Planificação calculada</div>
+          <div class="value" id="planinfo">— × — mm</div>
+        </div>
+
+        <div class="error-box" id="erro"></div>
+
+        <button class="primary" id="gerar">Gerar e baixar PDF</button>
+
+      </div><!-- /.col-form -->
+
+      <div class="col-preview">
+        <div class="preview-header">
+          <h3>Pré-visualização</h3>
+          <span class="ao-vivo">ao vivo</span>
+        </div>
+        <div class="preview-svg" id="preview-svg-container">
+          <div class="preview-vazio">Preencha as dimensões para visualizar</div>
+        </div>
+        <div class="preview-info" id="preview-info" style="display: none;">
+          <div class="item"><span>Tamanho planificado:</span> <b id="preview-tamanho">— × —</b></div>
+          <div class="item"><span>Saída:</span> <b id="preview-saida">—</b></div>
+        </div>
+      </div><!-- /.col-preview -->
+
+    </div><!-- /.layout-2col -->
+</div><!-- /.container -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const { jsPDF } = window.jspdf;
+
+const els = {
+  comprimento: document.getElementById('comprimento'),
+  largura: document.getElementById('largura'),
+  altura: document.getElementById('altura'),
+  tipo_saida: document.getElementById('tipo_saida'),
+  aba_cola: document.getElementById('aba_cola'),
+  trava_altura: document.getElementById('trava_altura'),
+  l_largura: document.getElementById('l_largura'),
+  l_profundidade: document.getElementById('l_profundidade'),
+  vinco_delta: document.getElementById('vinco_delta'),
+  raio_trava: document.getElementById('raio_trava'),
+  raio_aba: document.getElementById('raio_aba'),
+};
+const planinfo = document.getElementById('planinfo');
+const erroBox = document.getElementById('erro');
+const btn = document.getElementById('gerar');
+
+// Toggle de opções avançadas
+const advToggle = document.getElementById('adv-toggle');
+const advContent = document.getElementById('adv-content');
+advToggle.addEventListener('click', () => {
+  advToggle.classList.toggle('open');
+  advContent.classList.toggle('open');
+});
+
+function getConfig() {
+  return {
+    C: parseFloat(els.comprimento.value),
+    L: parseFloat(els.largura.value),
+    A: parseFloat(els.altura.value),
+    ABA_COLA: parseFloat(els.aba_cola.value),
+    TRAVA: parseFloat(els.trava_altura.value),
+    L_DA_TRAVA: parseFloat(els.l_largura.value),
+    L_VERTICAL: parseFloat(els.l_profundidade.value),
+    VINCO_DELTA: parseFloat(els.vinco_delta.value),
+    RAIO_TRAVA: parseFloat(els.raio_trava.value),
+    RAIO_ABA: parseFloat(els.raio_aba.value),
+    tipo_saida: els.tipo_saida.value,
+  };
+}
+
+// Calcula TODOS os pontos do cartucho dado uma config
+function calcularGeometria(c) {
+  const COMP_DELTA = 0.5;
+  const LARG_02 = c.L - COMP_DELTA;
+  const TAMPA = c.L;
+  const CHANFRO_Y = c.ABA_COLA * Math.tan(10 * Math.PI / 180);
+  const AFUNIL = c.L_DA_TRAVA + 1.0;
+
+  const ABA_LAT_VERTICAL = c.L_DA_TRAVA - 1.0;
+  const ABA_LAT_DIAG45 = ABA_LAT_VERTICAL;
+  const ABA_LAT_TOTAL_VERTICAL = (c.C / 2) - 1.0;
+  const ABA_LAT_DIAG8_VERT = ABA_LAT_TOTAL_VERTICAL - ABA_LAT_VERTICAL - ABA_LAT_DIAG45 * Math.sin(45 * Math.PI / 180);
+
+  const LARGURA_TOTAL = c.ABA_COLA + c.C + c.L + c.C + LARG_02;
+  const ALTURA_TOTAL = c.TRAVA + TAMPA + c.A + TAMPA + c.TRAVA;
+
+  const X_COMP01_INI = c.ABA_COLA;
+  const X_LARG01_INI = X_COMP01_INI + c.C;
+  const X_COMP02_INI = X_LARG01_INI + c.L;
+  const X_LARG02_INI = X_COMP02_INI + c.C;
+  const X_LARG02_FIM = X_LARG02_INI + LARG_02;
+
+  const Y_TRAVA1_TOPO = 0;
+  const Y_TAMPA1_TOPO = c.TRAVA;
+  const Y_CORPO_TOPO = c.TRAVA + TAMPA;
+  const Y_CORPO_BASE = Y_CORPO_TOPO + c.A;
+  const Y_TAMPA7_BASE = Y_CORPO_BASE + TAMPA;
+  const Y_TRAVA7_FIM = Y_TAMPA7_BASE + c.TRAVA;
+
+  const Y_P1 = Y_CORPO_TOPO + CHANFRO_Y;
+  const Y_P2 = Y_CORPO_BASE - CHANFRO_Y;
+
+  const Y_VINCO_CORPO_TAMPA1 = Y_CORPO_TOPO - c.VINCO_DELTA;
+  const Y_VINCO_CORPO_TAMPA7 = Y_CORPO_BASE + c.VINCO_DELTA;
+  const Y_TAMPA1_TOPO_COMP = Y_TAMPA1_TOPO - c.VINCO_DELTA;
+  const Y_TAMPA7_BASE_COMP = Y_TAMPA7_BASE + c.VINCO_DELTA;
+  const Y_TRAVA1_TOPO_COMP = Y_TRAVA1_TOPO;
+  const Y_TRAVA7_FIM_COMP = Y_TRAVA7_FIM;
+  const Y_VINCO_TAMPA_TRAVA1 = c.TRAVA;
+  const Y_VINCO_TAMPA_TRAVA7 = Y_TAMPA7_BASE;
+
+  // Aba lateral esquerda superior
+  const P7_X = X_LARG01_INI + c.L;
+  const P33_X = P7_X - 0.5;
+  const P33_Y = Y_CORPO_TOPO;
+  const P34_X = P33_X;
+  const P34_Y = P33_Y - ABA_LAT_VERTICAL;
+  const delta_45 = ABA_LAT_DIAG45 * Math.sin(45 * Math.PI / 180);
+  const P35_X = P34_X - delta_45;
+  const P35_Y = P34_Y - delta_45;
+  const diag8_comprimento = ABA_LAT_DIAG8_VERT / Math.cos(8 * Math.PI / 180);
+  const delta_8_x = diag8_comprimento * Math.sin(8 * Math.PI / 180);
+  const P36_X = P35_X - delta_8_x;
+  const P36_Y = P35_Y - ABA_LAT_DIAG8_VERT;
+  const P37_X = X_LARG01_INI;
+  const P37_Y = P36_Y;
+
+  // Aba lateral direita superior
+  const P9_X = X_LARG02_INI;
+  const P40_X = P9_X + 0.5;
+  const P40_Y = Y_CORPO_TOPO;
+  const P41_X = P40_X;
+  const P41_Y = P40_Y - ABA_LAT_VERTICAL;
+  const P42_X = P41_X + delta_45;
+  const P42_Y = P41_Y - delta_45;
+  const P43_X = P42_X + delta_8_x;
+  const P43_Y = P42_Y - ABA_LAT_DIAG8_VERT;
+  const P44_X = X_LARG02_FIM;
+  const P44_Y = P43_Y;
+
+  // Aba lateral esquerda inferior
+  const P6_X = X_LARG01_INI;
+  const P6_Y = Y_CORPO_BASE;
+  const P45_X = P6_X + 0.5;
+  const P45_Y = Y_CORPO_BASE;
+  const P46_X = P45_X;
+  const P46_Y = P45_Y + ABA_LAT_VERTICAL;
+  const P47_X = P46_X + delta_45;
+  const P47_Y = P46_Y + delta_45;
+  const P48_X = P47_X + delta_8_x;
+  const P48_Y = P47_Y + ABA_LAT_DIAG8_VERT;
+  const P49_X = X_COMP02_INI;
+  const P49_Y = P48_Y;
+
+  // Aba lateral direita inferior (sai DIRETO de P12)
+  const P12_X = X_LARG02_FIM;
+  const P12_Y = Y_CORPO_BASE;
+  const P52_X = P12_X;
+  const P52_Y = P12_Y + ABA_LAT_VERTICAL;
+  const P53_X = P52_X - delta_45;
+  const P53_Y = P52_Y + delta_45;
+  const P54_X = P53_X - delta_8_x;
+  const P54_Y = P53_Y + ABA_LAT_DIAG8_VERT;
+  const P55_X = X_LARG02_INI;
+  const P55_Y = P54_Y;
+
+  return {
+    LARGURA_TOTAL, ALTURA_TOTAL, LARG_02, TAMPA, CHANFRO_Y, AFUNIL,
+    X_COMP01_INI, X_LARG01_INI, X_COMP02_INI, X_LARG02_INI, X_LARG02_FIM,
+    Y_TRAVA1_TOPO, Y_TAMPA1_TOPO, Y_CORPO_TOPO, Y_CORPO_BASE, Y_TAMPA7_BASE, Y_TRAVA7_FIM,
+    Y_P1, Y_P2,
+    Y_VINCO_CORPO_TAMPA1, Y_VINCO_CORPO_TAMPA7,
+    Y_TAMPA1_TOPO_COMP, Y_TAMPA7_BASE_COMP,
+    Y_TRAVA1_TOPO_COMP, Y_TRAVA7_FIM_COMP,
+    Y_VINCO_TAMPA_TRAVA1, Y_VINCO_TAMPA_TRAVA7,
+    P33_X, P33_Y, P34_X, P34_Y, P35_X, P35_Y, P36_X, P36_Y, P37_X, P37_Y,
+    P40_X, P40_Y, P41_X, P41_Y, P42_X, P42_Y, P43_X, P43_Y, P44_X, P44_Y,
+    P45_X, P45_Y, P46_X, P46_Y, P47_X, P47_Y, P48_X, P48_Y, P49_X, P49_Y,
+    P52_X, P52_Y, P53_X, P53_Y, P54_X, P54_Y, P55_X, P55_Y,
+    P12_X, P12_Y,
+  };
+}
+
+// Constrói o path SVG completo (contorno + vincos)
+function construirPath(c, g) {
+  const BEZIER_K = 0.5523;
+  const cortes = []; // lista de segmentos: {type: 'L'|'C', pontos}
+  const vincos = []; // {x1, y1, x2, y2}
+
+  // Helper para curva Bezier de 90° entre dois pontos via centro
+  function bezierCantoTrava(centroX, centroY, raio, dirX, dirY) {
+    // Retorna control points para curva de "pré → pós" passando por centro
+    return null;
+  }
+
+  // === CONTORNO ===
+  let path = '';
+
+  // Trava 7 com arredondamento em P21/P22 — função reaproveitada
+  function curvaTrava(yTopo, yBase, xEsq, xDir, raio, sentido) {
+    // sentido = 'baixo' para trava 7, 'cima' para trava 1
+    let p = '';
+    const sinal = sentido === 'baixo' ? 1 : -1;
+    const dyE = sinal * (yBase - yTopo) * sinal; // adapta
+    return p;
+  }
+
+  return { path, vincos };
+}
+
+// Gera o SVG do preview a partir da geometria
+function gerarSVG(c, g, modoPreview) {
+  const BEZIER_K = 0.5523;
+  const plotter = (c.tipo_saida === 'plotter');
+  const CORTE = plotter ? '#FF0000' : '#D8006A';
+  const VINCO = plotter ? '#0000FF' : '#D8006A';
+  const VINCO_DASH = plotter ? '' : '3,2';
+
+  const margin = 10;
+  const vbW = g.LARGURA_TOTAL + margin * 2;
+  const vbH = g.ALTURA_TOTAL + margin * 2;
+
+  const elems = [];
+
+  // ============ HELPERS PARA SVG ============
+  function svgLine(x1, y1, x2, y2, color, dashed) {
+    // No modo plotter (Silhouette/Cricut), vincos são linhas SÓLIDAS azuis
+    // No modo faca, vincos são tracejados
+    const aplicarDash = dashed && !plotter;
+    const dash = aplicarDash ? `stroke-dasharray="${VINCO_DASH}"` : '';
+    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="${dashed ? 0.3 : 0.4}" ${dash}/>`;
+  }
+
+  function svgBezier(x1, y1, cx1, cy1, cx2, cy2, x2, y2, color) {
+    return `<path d="M ${x1} ${y1} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${x2} ${y2}" fill="none" stroke="${color}" stroke-width="0.4"/>`;
+  }
+
+  // ============ TRAVA 7 (P21/P22 arredondados) ============
+  function travaInferior(xEsq, xDir, yTopo, yBase, raio) {
+    const dxE = g.AFUNIL, dyE = yBase - yTopo;
+    const compE = Math.sqrt(dxE*dxE + dyE*dyE);
+    const uxE = dxE/compE, uyE = dyE/compE;
+    const p21x = xEsq + g.AFUNIL, p21y = yBase;
+    const preP21x = p21x - uxE*raio, preP21y = p21y - uyE*raio;
+    elems.push(svgLine(xEsq, yTopo, preP21x, preP21y, CORTE));
+
+    const postP21x = p21x + raio, postP21y = p21y;
+    elems.push(svgBezier(preP21x, preP21y,
+      p21x - uxE*raio*(1-BEZIER_K), p21y - uyE*raio*(1-BEZIER_K),
+      p21x + raio*BEZIER_K, p21y,
+      postP21x, postP21y, CORTE));
+
+    const p22x = xDir - g.AFUNIL, p22y = yBase;
+    const preP22x = p22x - raio;
+    elems.push(svgLine(postP21x, postP21y, preP22x, postP21y, CORTE));
+
+    const dxD = g.AFUNIL, dyD = yTopo - yBase;
+    const compD = Math.sqrt(dxD*dxD + dyD*dyD);
+    const uxD = dxD/compD, uyD = dyD/compD;
+    const postP22x = p22x + uxD*raio, postP22y = p22y + uyD*raio;
+    elems.push(svgBezier(preP22x, p22y,
+      p22x - raio*BEZIER_K, p22y,
+      p22x + uxD*raio*(1-BEZIER_K), p22y + uyD*raio*(1-BEZIER_K),
+      postP22x, postP22y, CORTE));
+
+    elems.push(svgLine(postP22x, postP22y, xDir, yTopo, CORTE));
+  }
+
+  function travaSuperior(xEsq, xDir, yBase, yTopo, raio) {
+    const dxE = g.AFUNIL, dyE = yTopo - yBase;
+    const compE = Math.sqrt(dxE*dxE + dyE*dyE);
+    const uxE = dxE/compE, uyE = dyE/compE;
+    const p16x = xEsq + g.AFUNIL, p16y = yTopo;
+    const preP16x = p16x - uxE*raio, preP16y = p16y - uyE*raio;
+    elems.push(svgLine(xEsq, yBase, preP16x, preP16y, CORTE));
+
+    const postP16x = p16x + raio, postP16y = p16y;
+    elems.push(svgBezier(preP16x, preP16y,
+      p16x - uxE*raio*(1-BEZIER_K), p16y - uyE*raio*(1-BEZIER_K),
+      p16x + raio*BEZIER_K, p16y,
+      postP16x, postP16y, CORTE));
+
+    const p17x = xDir - g.AFUNIL, p17y = yTopo;
+    const preP17x = p17x - raio;
+    elems.push(svgLine(postP16x, postP16y, preP17x, postP16y, CORTE));
+
+    const dxD = g.AFUNIL, dyD = yBase - yTopo;
+    const compD = Math.sqrt(dxD*dxD + dyD*dyD);
+    const uxD = dxD/compD, uyD = dyD/compD;
+    const postP17x = p17x + uxD*raio, postP17y = p17y + uyD*raio;
+    elems.push(svgBezier(preP17x, p17y,
+      p17x - raio*BEZIER_K, p17y,
+      p17x + uxD*raio*(1-BEZIER_K), p17y + uyD*raio*(1-BEZIER_K),
+      postP17x, postP17y, CORTE));
+
+    elems.push(svgLine(postP17x, postP17y, xDir, yBase, CORTE));
+  }
+
+  // ============ CORTES ============
+
+  // Aba de cola
+  elems.push(svgLine(0, g.Y_P1, 0, g.Y_P2, CORTE));
+  elems.push(svgLine(0, g.Y_P2, g.X_COMP01_INI, g.Y_CORPO_BASE, CORTE));
+
+  // Base esquerda: P4 → P45
+  elems.push(svgLine(g.X_COMP01_INI, g.Y_CORPO_BASE, g.P45_X, g.Y_CORPO_BASE, CORTE));
+
+  // Aba inferior esquerda P45 → P49
+  elems.push(svgLine(g.P45_X, g.P45_Y, g.P46_X, g.P46_Y, CORTE));
+  elems.push(svgLine(g.P46_X, g.P46_Y, g.P47_X, g.P47_Y, CORTE));
+  if (c.RAIO_ABA > 0) {
+    const v8x = g.P48_X - g.P47_X, v8y = g.P48_Y - g.P47_Y;
+    const v8len = Math.sqrt(v8x*v8x + v8y*v8y);
+    const ux = v8x/v8len, uy = v8y/v8len;
+    const preX = g.P48_X - ux*c.RAIO_ABA, preY = g.P48_Y - uy*c.RAIO_ABA;
+    const posX = g.P48_X + c.RAIO_ABA, posY = g.P48_Y;
+    elems.push(svgLine(g.P47_X, g.P47_Y, preX, preY, CORTE));
+    elems.push(svgBezier(preX, preY,
+      g.P48_X - ux*c.RAIO_ABA*(1-BEZIER_K), g.P48_Y - uy*c.RAIO_ABA*(1-BEZIER_K),
+      g.P48_X + c.RAIO_ABA*BEZIER_K, g.P48_Y,
+      posX, posY, CORTE));
+    elems.push(svgLine(posX, posY, g.P49_X, g.P49_Y, CORTE));
+  } else {
+    elems.push(svgLine(g.P47_X, g.P47_Y, g.P48_X, g.P48_Y, CORTE));
+    elems.push(svgLine(g.P48_X, g.P48_Y, g.P49_X, g.P49_Y, CORTE));
+  }
+
+  // Corte vertical P49 → P8 (lateral esquerda Comp 02)
+  elems.push(svgLine(g.X_COMP02_INI, g.P49_Y, g.X_COMP02_INI, g.Y_CORPO_BASE, CORTE));
+
+  // Lateral esquerda Tampa 7 (P8 → P19)
+  elems.push(svgLine(g.X_COMP02_INI, g.Y_CORPO_BASE, g.X_COMP02_INI, g.Y_TAMPA7_BASE_COMP, CORTE));
+
+  // Trava 7
+  travaInferior(g.X_COMP02_INI, g.X_LARG02_INI, g.Y_TAMPA7_BASE_COMP, g.Y_TRAVA7_FIM_COMP, c.RAIO_TRAVA);
+
+  // Lateral direita Tampa 7 (P20 → P10)
+  elems.push(svgLine(g.X_LARG02_INI, g.Y_TAMPA7_BASE_COMP, g.X_LARG02_INI, g.Y_CORPO_BASE, CORTE));
+
+  // Corte vertical P10 → P55 (lateral direita Comp 02)
+  elems.push(svgLine(g.X_LARG02_INI, g.Y_CORPO_BASE, g.X_LARG02_INI, g.P55_Y, CORTE));
+
+  // Aba inferior direita: P55 → P54 → P53 → P52 → P12
+  if (c.RAIO_ABA > 0) {
+    const v8x = g.P54_X - g.P53_X, v8y = g.P54_Y - g.P53_Y;
+    const v8len = Math.sqrt(v8x*v8x + v8y*v8y);
+    const ux = v8x/v8len, uy = v8y/v8len;
+    const preX = g.P54_X - ux*c.RAIO_ABA, preY = g.P54_Y - uy*c.RAIO_ABA;
+    const posX = g.P54_X - c.RAIO_ABA, posY = g.P54_Y;
+    elems.push(svgLine(g.P55_X, g.P55_Y, posX, posY, CORTE));
+    elems.push(svgBezier(posX, posY,
+      g.P54_X - c.RAIO_ABA*BEZIER_K, g.P54_Y,
+      g.P54_X - ux*c.RAIO_ABA*(1-BEZIER_K), g.P54_Y - uy*c.RAIO_ABA*(1-BEZIER_K),
+      preX, preY, CORTE));
+    elems.push(svgLine(preX, preY, g.P53_X, g.P53_Y, CORTE));
+  } else {
+    elems.push(svgLine(g.P55_X, g.P55_Y, g.P54_X, g.P54_Y, CORTE));
+    elems.push(svgLine(g.P54_X, g.P54_Y, g.P53_X, g.P53_Y, CORTE));
+  }
+  elems.push(svgLine(g.P53_X, g.P53_Y, g.P52_X, g.P52_Y, CORTE));
+  elems.push(svgLine(g.P52_X, g.P52_Y, g.P12_X, g.P12_Y, CORTE));
+
+  // Lateral direita CONTÍNUA: P12 → P44 (em x=X_LARG02_FIM)
+  elems.push(svgLine(g.X_LARG02_FIM, g.P12_Y, g.X_LARG02_FIM, g.P44_Y, CORTE));
+
+  // Aba superior direita: P44 → P40
+  if (c.RAIO_ABA > 0) {
+    const v8x = g.P43_X - g.P42_X, v8y = g.P43_Y - g.P42_Y;
+    const v8len = Math.sqrt(v8x*v8x + v8y*v8y);
+    const ux = v8x/v8len, uy = v8y/v8len;
+    const preX = g.P43_X - ux*c.RAIO_ABA, preY = g.P43_Y - uy*c.RAIO_ABA;
+    const posX = g.P43_X + c.RAIO_ABA, posY = g.P43_Y;
+    elems.push(svgLine(g.P44_X, g.P44_Y, posX, posY, CORTE));
+    elems.push(svgBezier(posX, posY,
+      g.P43_X + c.RAIO_ABA*BEZIER_K, g.P43_Y,
+      g.P43_X - ux*c.RAIO_ABA*(1-BEZIER_K), g.P43_Y - uy*c.RAIO_ABA*(1-BEZIER_K),
+      preX, preY, CORTE));
+    elems.push(svgLine(preX, preY, g.P42_X, g.P42_Y, CORTE));
+  } else {
+    elems.push(svgLine(g.P44_X, g.P44_Y, g.P43_X, g.P43_Y, CORTE));
+    elems.push(svgLine(g.P43_X, g.P43_Y, g.P42_X, g.P42_Y, CORTE));
+  }
+  elems.push(svgLine(g.P42_X, g.P42_Y, g.P41_X, g.P41_Y, CORTE));
+  elems.push(svgLine(g.P41_X, g.P41_Y, g.P40_X, g.P40_Y, CORTE));
+
+  // Topo Comp 02: P40 → P33
+  elems.push(svgLine(g.P40_X, g.Y_CORPO_TOPO, g.P33_X, g.Y_CORPO_TOPO, CORTE));
+
+  // Aba esquerda superior: P33 → P37
+  elems.push(svgLine(g.P33_X, g.P33_Y, g.P34_X, g.P34_Y, CORTE));
+  elems.push(svgLine(g.P34_X, g.P34_Y, g.P35_X, g.P35_Y, CORTE));
+  if (c.RAIO_ABA > 0) {
+    const v8x = g.P36_X - g.P35_X, v8y = g.P36_Y - g.P35_Y;
+    const v8len = Math.sqrt(v8x*v8x + v8y*v8y);
+    const ux = v8x/v8len, uy = v8y/v8len;
+    const preX = g.P36_X - ux*c.RAIO_ABA, preY = g.P36_Y - uy*c.RAIO_ABA;
+    const posX = g.P36_X - c.RAIO_ABA, posY = g.P36_Y;
+    elems.push(svgLine(g.P35_X, g.P35_Y, preX, preY, CORTE));
+    elems.push(svgBezier(preX, preY,
+      g.P36_X - ux*c.RAIO_ABA*(1-BEZIER_K), g.P36_Y - uy*c.RAIO_ABA*(1-BEZIER_K),
+      g.P36_X - c.RAIO_ABA*BEZIER_K, g.P36_Y,
+      posX, posY, CORTE));
+    elems.push(svgLine(posX, posY, g.P37_X, g.P37_Y, CORTE));
+  } else {
+    elems.push(svgLine(g.P35_X, g.P35_Y, g.P36_X, g.P36_Y, CORTE));
+    elems.push(svgLine(g.P36_X, g.P36_Y, g.P37_X, g.P37_Y, CORTE));
+  }
+
+  // Corte vertical P5 → P37
+  elems.push(svgLine(g.X_LARG01_INI, g.Y_CORPO_TOPO, g.X_LARG01_INI, g.P37_Y, CORTE));
+
+  // Lateral direita Tampa 1: P37 → P14
+  elems.push(svgLine(g.X_LARG01_INI, g.P37_Y, g.X_LARG01_INI, g.Y_TAMPA1_TOPO_COMP, CORTE));
+
+  // Trava 1
+  travaSuperior(g.X_COMP01_INI, g.X_LARG01_INI, g.Y_TAMPA1_TOPO_COMP, g.Y_TRAVA1_TOPO_COMP, c.RAIO_TRAVA);
+
+  // Lateral esquerda Tampa 1 (P13 → P3)
+  elems.push(svgLine(g.X_COMP01_INI, g.Y_TAMPA1_TOPO_COMP, g.X_COMP01_INI, g.Y_CORPO_TOPO, CORTE));
+
+  // Chanfro P3 → P1
+  elems.push(svgLine(g.X_COMP01_INI, g.Y_CORPO_TOPO, 0, g.Y_P1, CORTE));
+
+  // Incisões em L Aba 1
+  elems.push(svgLine(g.X_COMP01_INI, g.Y_TAMPA1_TOPO_COMP, g.X_COMP01_INI + c.L_DA_TRAVA, g.Y_TAMPA1_TOPO_COMP, CORTE));
+  elems.push(svgLine(g.X_COMP01_INI + c.L_DA_TRAVA, g.Y_TAMPA1_TOPO_COMP, g.X_COMP01_INI + c.L_DA_TRAVA, g.Y_TAMPA1_TOPO_COMP + c.L_VERTICAL, CORTE));
+  elems.push(svgLine(g.X_LARG01_INI, g.Y_TAMPA1_TOPO_COMP, g.X_LARG01_INI - c.L_DA_TRAVA, g.Y_TAMPA1_TOPO_COMP, CORTE));
+  elems.push(svgLine(g.X_LARG01_INI - c.L_DA_TRAVA, g.Y_TAMPA1_TOPO_COMP, g.X_LARG01_INI - c.L_DA_TRAVA, g.Y_TAMPA1_TOPO_COMP + c.L_VERTICAL, CORTE));
+
+  // Incisões em L Aba 7
+  elems.push(svgLine(g.X_COMP02_INI, g.Y_TAMPA7_BASE_COMP, g.X_COMP02_INI + c.L_DA_TRAVA, g.Y_TAMPA7_BASE_COMP, CORTE));
+  elems.push(svgLine(g.X_COMP02_INI + c.L_DA_TRAVA, g.Y_TAMPA7_BASE_COMP, g.X_COMP02_INI + c.L_DA_TRAVA, g.Y_TAMPA7_BASE_COMP - c.L_VERTICAL, CORTE));
+  elems.push(svgLine(g.X_LARG02_INI, g.Y_TAMPA7_BASE_COMP, g.X_LARG02_INI - c.L_DA_TRAVA, g.Y_TAMPA7_BASE_COMP, CORTE));
+  elems.push(svgLine(g.X_LARG02_INI - c.L_DA_TRAVA, g.Y_TAMPA7_BASE_COMP, g.X_LARG02_INI - c.L_DA_TRAVA, g.Y_TAMPA7_BASE_COMP - c.L_VERTICAL, CORTE));
+
+  // ============ VINCOS ============
+  // Verticais entre painéis
+  [g.X_COMP01_INI, g.X_LARG01_INI, g.X_COMP02_INI, g.X_LARG02_INI].forEach(x => {
+    elems.push(svgLine(x, g.Y_CORPO_TOPO, x, g.Y_CORPO_BASE, VINCO, true));
+  });
+  // Corpo-Tampa 1 (P38 → P39)
+  elems.push(svgLine(g.X_COMP01_INI, g.Y_VINCO_CORPO_TAMPA1, g.X_LARG01_INI, g.Y_VINCO_CORPO_TAMPA1, VINCO, true));
+  // Corpo-Tampa 7
+  elems.push(svgLine(g.X_COMP02_INI, g.Y_VINCO_CORPO_TAMPA7, g.X_LARG02_INI, g.Y_VINCO_CORPO_TAMPA7, VINCO, true));
+  // Tampa-Trava (curtos) - COM DESLOCAMENTO DO VINCO
+  // Tampa 1 (cima): vinco desloca para BAIXO (y aumenta)
+  // Tampa 7 (baixo): vinco desloca para CIMA (y diminui)
+  elems.push(svgLine(g.X_COMP01_INI + c.L_DA_TRAVA, g.Y_VINCO_TAMPA_TRAVA1 + c.VINCO_DELTA, g.X_LARG01_INI - c.L_DA_TRAVA, g.Y_VINCO_TAMPA_TRAVA1 + c.VINCO_DELTA, VINCO, true));
+  elems.push(svgLine(g.X_COMP02_INI + c.L_DA_TRAVA, g.Y_VINCO_TAMPA_TRAVA7 - c.VINCO_DELTA, g.X_LARG02_INI - c.L_DA_TRAVA, g.Y_VINCO_TAMPA_TRAVA7 - c.VINCO_DELTA, VINCO, true));
+  // Vincos das abas laterais
+  elems.push(svgLine(g.X_LARG01_INI, g.Y_CORPO_TOPO, g.P33_X, g.Y_CORPO_TOPO, VINCO, true));
+  elems.push(svgLine(g.P40_X, g.P40_Y, g.X_LARG02_FIM, g.Y_CORPO_TOPO, VINCO, true));
+  elems.push(svgLine(g.P45_X, g.Y_CORPO_BASE, g.X_COMP02_INI, g.Y_CORPO_BASE, VINCO, true));
+  elems.push(svgLine(g.P12_X, g.Y_CORPO_BASE, g.X_LARG02_INI, g.Y_CORPO_BASE, VINCO, true));
+
+  return `<svg viewBox="${-margin} ${-margin} ${vbW} ${vbH}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">${elems.join('')}</svg>`;
+}
+
+function renderPreview(c) {
+  const container = document.getElementById('preview-svg-container');
+  const infoBox = document.getElementById('preview-info');
+
+  if (!c.C || !c.L || !c.A || c.C < 15 || c.L < 15 || c.A < 30) {
+    container.innerHTML = '<div class="preview-vazio">Preencha as dimensões para visualizar</div>';
+    infoBox.style.display = 'none';
+    return;
+  }
+
+  const g = calcularGeometria(c);
+
+  // Validação: aba lateral precisa de comprimento mínimo
+  if (g.LARGURA_TOTAL <= 0 || g.ALTURA_TOTAL <= 0) {
+    container.innerHTML = '<div class="preview-vazio">Configuração inválida</div>';
+    infoBox.style.display = 'none';
+    return;
+  }
+
+  container.innerHTML = gerarSVG(c, g, true);
+
+  // Info
+  infoBox.style.display = 'block';
+  document.getElementById('preview-tamanho').textContent =
+    `${g.LARGURA_TOTAL.toFixed(1)} × ${g.ALTURA_TOTAL.toFixed(1)} mm`;
+  document.getElementById('preview-saida').textContent =
+    c.tipo_saida === 'plotter' ? 'Plotter (vermelho/azul)' : 'Faca Gráfica (magenta)';
+
+  planinfo.textContent = `${g.LARGURA_TOTAL.toFixed(1)} × ${g.ALTURA_TOTAL.toFixed(1)} mm`;
+}
+
+function atualizar() {
+  const c = getConfig();
+  erroBox.classList.remove('show');
+  renderPreview(c);
+}
+
+function gerarPDF() {
+  const c = getConfig();
+  const g = calcularGeometria(c);
+
+  // PDF de tamanho dinâmico — a página é criada do tamanho exato da peça + margem
+  // (igual ao gerador de sacolas, sem limite de A4)
+  const margem = 15;            // margem em volta da peça
+  const espaco_rodape = 12;     // espaço extra para o texto do rodapé
+  const PAGE_W = g.LARGURA_TOTAL + 2 * margem;
+  const PAGE_H = g.ALTURA_TOTAL + 2 * margem + espaco_rodape;
+  const offsetX = (PAGE_W - g.LARGURA_TOTAL) / 2;
+  const offsetY = margem;
+
+  const doc = new jsPDF({
+    orientation: PAGE_W > PAGE_H ? 'landscape' : 'portrait',
+    unit: 'mm',
+    format: [PAGE_W, PAGE_H],
+  });
+  doc.setProperties({
+    title: `CARTUCHO ${c.C}x${c.L}x${c.A} mm`,
+    author: 'CrieFacas',
+  });
+  const plotter = (c.tipo_saida === 'plotter');
+  const corte = plotter ? [255, 0, 0] : [216, 0, 106];
+  const vinco = plotter ? [0, 0, 255] : [216, 0, 106];
+  const BEZIER_K = 0.5523;
+
+  doc.setLineWidth(0.25);
+  doc.setDrawColor(...corte);
+
+  // Funções helper para o jsPDF
+  function mmX(x) { return offsetX + x; }
+  function mmY(y) { return offsetY + y; }
+
+  function line(x1, y1, x2, y2, dashed = false, color = corte) {
+    doc.setDrawColor(...color);
+    // No modo plotter, vincos são SÓLIDOS (não tracejados)
+    if (dashed && !plotter) doc.setLineDashPattern([1, 0.8], 0);
+    else doc.setLineDashPattern([], 0);
+    doc.line(mmX(x1), mmY(y1), mmX(x2), mmY(y2));
+  }
+
+  function bezier(x1, y1, cx1, cy1, cx2, cy2, x2, y2, color = corte) {
+    doc.setDrawColor(...color);
+    doc.setLineDashPattern([], 0);
+    doc.lines(
+      [[cx1 - x1, cy1 - y1, cx2 - x1, cy2 - y1, x2 - x1, y2 - y1]],
+      mmX(x1), mmY(y1),
+      [1, 1], 'S', false
+    );
+  }
+
+  // ========= TRAVA 7 (P21/P22 arredondados) =========
+  function travaInferiorPDF(xEsq, xDir, yTopo, yBase, raio) {
+    const dxE = g.AFUNIL, dyE = yBase - yTopo;
+    const compE = Math.sqrt(dxE*dxE + dyE*dyE);
+    const uxE = dxE/compE, uyE = dyE/compE;
+    const p21x = xEsq + g.AFUNIL, p21y = yBase;
+    const preP21x = p21x - uxE*raio, preP21y = p21y - uyE*raio;
+    line(xEsq, yTopo, preP21x, preP21y);
+    const postP21x = p21x + raio, postP21y = p21y;
+    bezier(preP21x, preP21y,
+      p21x - uxE*raio*(1-BEZIER_K), p21y - uyE*raio*(1-BEZIER_K),
+      p21x + raio*BEZIER_K, p21y,
+      postP21x, postP21y);
+    const p22x = xDir - g.AFUNIL, p22y = yBase;
+    const preP22x = p22x - raio;
+    line(postP21x, postP21y, preP22x, postP21y);
+    const dxD = g.AFUNIL, dyD = yTopo - yBase;
+    const compD = Math.sqrt(dxD*dxD + dyD*dyD);
+    const uxD = dxD/compD, uyD = dyD/compD;
+    const postP22x = p22x + uxD*raio, postP22y = p22y + uyD*raio;
+    bezier(preP22x, p22y,
+      p22x - raio*BEZIER_K, p22y,
+      p22x + uxD*raio*(1-BEZIER_K), p22y + uyD*raio*(1-BEZIER_K),
+      postP22x, postP22y);
+    line(postP22x, postP22y, xDir, yTopo);
+  }
+
+  function travaSuperiorPDF(xEsq, xDir, yBase, yTopo, raio) {
+    const dxE = g.AFUNIL, dyE = yTopo - yBase;
+    const compE = Math.sqrt(dxE*dxE + dyE*dyE);
+    const uxE = dxE/compE, uyE = dyE/compE;
+    const p16x = xEsq + g.AFUNIL, p16y = yTopo;
+    const preP16x = p16x - uxE*raio, preP16y = p16y - uyE*raio;
+    line(xEsq, yBase, preP16x, preP16y);
+    const postP16x = p16x + raio, postP16y = p16y;
+    bezier(preP16x, preP16y,
+      p16x - uxE*raio*(1-BEZIER_K), p16y - uyE*raio*(1-BEZIER_K),
+      p16x + raio*BEZIER_K, p16y,
+      postP16x, postP16y);
+    const p17x = xDir - g.AFUNIL, p17y = yTopo;
+    const preP17x = p17x - raio;
+    line(postP16x, postP16y, preP17x, postP16y);
+    const dxD = g.AFUNIL, dyD = yBase - yTopo;
+    const compD = Math.sqrt(dxD*dxD + dyD*dyD);
+    const uxD = dxD/compD, uyD = dyD/compD;
+    const postP17x = p17x + uxD*raio, postP17y = p17y + uyD*raio;
+    bezier(preP17x, p17y,
+      p17x - raio*BEZIER_K, p17y,
+      p17x + uxD*raio*(1-BEZIER_K), p17y + uyD*raio*(1-BEZIER_K),
+      postP17x, postP17y);
+    line(postP17x, postP17y, xDir, yBase);
+  }
+
+  // ========= CORTES =========
+  line(0, g.Y_P1, 0, g.Y_P2);
+  line(0, g.Y_P2, g.X_COMP01_INI, g.Y_CORPO_BASE);
+  line(g.X_COMP01_INI, g.Y_CORPO_BASE, g.P45_X, g.Y_CORPO_BASE);
+
+  // Aba inferior esquerda
+  line(g.P45_X, g.P45_Y, g.P46_X, g.P46_Y);
+  line(g.P46_X, g.P46_Y, g.P47_X, g.P47_Y);
+  if (c.RAIO_ABA > 0) {
+    const v8x = g.P48_X - g.P47_X, v8y = g.P48_Y - g.P47_Y;
+    const v8len = Math.sqrt(v8x*v8x + v8y*v8y);
+    const ux = v8x/v8len, uy = v8y/v8len;
+    const preX = g.P48_X - ux*c.RAIO_ABA, preY = g.P48_Y - uy*c.RAIO_ABA;
+    line(g.P47_X, g.P47_Y, preX, preY);
+    bezier(preX, preY,
+      g.P48_X - ux*c.RAIO_ABA*(1-BEZIER_K), g.P48_Y - uy*c.RAIO_ABA*(1-BEZIER_K),
+      g.P48_X + c.RAIO_ABA*BEZIER_K, g.P48_Y,
+      g.P48_X + c.RAIO_ABA, g.P48_Y);
+    line(g.P48_X + c.RAIO_ABA, g.P48_Y, g.P49_X, g.P49_Y);
+  } else {
+    line(g.P47_X, g.P47_Y, g.P48_X, g.P48_Y);
+    line(g.P48_X, g.P48_Y, g.P49_X, g.P49_Y);
+  }
+  line(g.X_COMP02_INI, g.Y_CORPO_BASE, g.X_COMP02_INI, g.P49_Y);
+
+  // Tampa 7
+  line(g.X_COMP02_INI, g.Y_CORPO_BASE, g.X_COMP02_INI, g.Y_TAMPA7_BASE_COMP);
+  travaInferiorPDF(g.X_COMP02_INI, g.X_LARG02_INI, g.Y_TAMPA7_BASE_COMP, g.Y_TRAVA7_FIM_COMP, c.RAIO_TRAVA);
+  line(g.X_LARG02_INI, g.Y_TAMPA7_BASE_COMP, g.X_LARG02_INI, g.Y_CORPO_BASE);
+
+  // Aba inferior direita (sai direto de P12)
+  line(g.P12_X, g.P12_Y, g.P52_X, g.P52_Y);
+  line(g.P52_X, g.P52_Y, g.P53_X, g.P53_Y);
+  if (c.RAIO_ABA > 0) {
+    const v8x = g.P54_X - g.P53_X, v8y = g.P54_Y - g.P53_Y;
+    const v8len = Math.sqrt(v8x*v8x + v8y*v8y);
+    const ux = v8x/v8len, uy = v8y/v8len;
+    const preX = g.P54_X - ux*c.RAIO_ABA, preY = g.P54_Y - uy*c.RAIO_ABA;
+    line(g.P53_X, g.P53_Y, preX, preY);
+    bezier(preX, preY,
+      g.P54_X - ux*c.RAIO_ABA*(1-BEZIER_K), g.P54_Y - uy*c.RAIO_ABA*(1-BEZIER_K),
+      g.P54_X - c.RAIO_ABA*BEZIER_K, g.P54_Y,
+      g.P54_X - c.RAIO_ABA, g.P54_Y);
+    line(g.P54_X - c.RAIO_ABA, g.P54_Y, g.P55_X, g.P55_Y);
+  } else {
+    line(g.P53_X, g.P53_Y, g.P54_X, g.P54_Y);
+    line(g.P54_X, g.P54_Y, g.P55_X, g.P55_Y);
+  }
+  line(g.P55_X, g.Y_CORPO_BASE, g.P55_X, g.P55_Y);
+
+  // Lateral direita CONTÍNUA P12 → P44
+  line(g.P12_X, g.P12_Y, g.X_LARG02_FIM, g.P44_Y);
+
+  // Aba direita superior
+  if (c.RAIO_ABA > 0) {
+    const v8x = g.P43_X - g.P42_X, v8y = g.P43_Y - g.P42_Y;
+    const v8len = Math.sqrt(v8x*v8x + v8y*v8y);
+    const ux = v8x/v8len, uy = v8y/v8len;
+    const preX = g.P43_X - ux*c.RAIO_ABA, preY = g.P43_Y - uy*c.RAIO_ABA;
+    line(g.P44_X, g.P44_Y, g.P43_X + c.RAIO_ABA, g.P43_Y);
+    bezier(g.P43_X + c.RAIO_ABA, g.P43_Y,
+      g.P43_X + c.RAIO_ABA*BEZIER_K, g.P43_Y,
+      g.P43_X - ux*c.RAIO_ABA*(1-BEZIER_K), g.P43_Y - uy*c.RAIO_ABA*(1-BEZIER_K),
+      preX, preY);
+    line(preX, preY, g.P42_X, g.P42_Y);
+  } else {
+    line(g.P44_X, g.P44_Y, g.P43_X, g.P43_Y);
+    line(g.P43_X, g.P43_Y, g.P42_X, g.P42_Y);
+  }
+  line(g.P42_X, g.P42_Y, g.P41_X, g.P41_Y);
+  line(g.P41_X, g.P41_Y, g.P40_X, g.P40_Y);
+
+  // Topo Comp 02 entre P40 e P33
+  line(g.P40_X, g.Y_CORPO_TOPO, g.P33_X, g.Y_CORPO_TOPO);
+
+  // Aba esquerda superior
+  line(g.P33_X, g.P33_Y, g.P34_X, g.P34_Y);
+  line(g.P34_X, g.P34_Y, g.P35_X, g.P35_Y);
+  if (c.RAIO_ABA > 0) {
+    const v8x = g.P36_X - g.P35_X, v8y = g.P36_Y - g.P35_Y;
+    const v8len = Math.sqrt(v8x*v8x + v8y*v8y);
+    const ux = v8x/v8len, uy = v8y/v8len;
+    const preX = g.P36_X - ux*c.RAIO_ABA, preY = g.P36_Y - uy*c.RAIO_ABA;
+    line(g.P35_X, g.P35_Y, preX, preY);
+    bezier(preX, preY,
+      g.P36_X - ux*c.RAIO_ABA*(1-BEZIER_K), g.P36_Y - uy*c.RAIO_ABA*(1-BEZIER_K),
+      g.P36_X - c.RAIO_ABA*BEZIER_K, g.P36_Y,
+      g.P36_X - c.RAIO_ABA, g.P36_Y);
+    line(g.P36_X - c.RAIO_ABA, g.P36_Y, g.P37_X, g.P37_Y);
+  } else {
+    line(g.P35_X, g.P35_Y, g.P36_X, g.P36_Y);
+    line(g.P36_X, g.P36_Y, g.P37_X, g.P37_Y);
+  }
+
+  line(g.X_LARG01_INI, g.Y_CORPO_TOPO, g.X_LARG01_INI, g.P37_Y);
+  line(g.X_LARG01_INI, g.P37_Y, g.X_LARG01_INI, g.Y_TAMPA1_TOPO_COMP);
+
+  travaSuperiorPDF(g.X_COMP01_INI, g.X_LARG01_INI, g.Y_TAMPA1_TOPO_COMP, g.Y_TRAVA1_TOPO_COMP, c.RAIO_TRAVA);
+  line(g.X_COMP01_INI, g.Y_TAMPA1_TOPO_COMP, g.X_COMP01_INI, g.Y_CORPO_TOPO);
+  line(g.X_COMP01_INI, g.Y_CORPO_TOPO, 0, g.Y_P1);
+
+  // Incisões L
+  line(g.X_COMP01_INI, g.Y_TAMPA1_TOPO_COMP, g.X_COMP01_INI + c.L_DA_TRAVA, g.Y_TAMPA1_TOPO_COMP);
+  line(g.X_COMP01_INI + c.L_DA_TRAVA, g.Y_TAMPA1_TOPO_COMP, g.X_COMP01_INI + c.L_DA_TRAVA, g.Y_TAMPA1_TOPO_COMP + c.L_VERTICAL);
+  line(g.X_LARG01_INI, g.Y_TAMPA1_TOPO_COMP, g.X_LARG01_INI - c.L_DA_TRAVA, g.Y_TAMPA1_TOPO_COMP);
+  line(g.X_LARG01_INI - c.L_DA_TRAVA, g.Y_TAMPA1_TOPO_COMP, g.X_LARG01_INI - c.L_DA_TRAVA, g.Y_TAMPA1_TOPO_COMP + c.L_VERTICAL);
+  line(g.X_COMP02_INI, g.Y_TAMPA7_BASE_COMP, g.X_COMP02_INI + c.L_DA_TRAVA, g.Y_TAMPA7_BASE_COMP);
+  line(g.X_COMP02_INI + c.L_DA_TRAVA, g.Y_TAMPA7_BASE_COMP, g.X_COMP02_INI + c.L_DA_TRAVA, g.Y_TAMPA7_BASE_COMP - c.L_VERTICAL);
+  line(g.X_LARG02_INI, g.Y_TAMPA7_BASE_COMP, g.X_LARG02_INI - c.L_DA_TRAVA, g.Y_TAMPA7_BASE_COMP);
+  line(g.X_LARG02_INI - c.L_DA_TRAVA, g.Y_TAMPA7_BASE_COMP, g.X_LARG02_INI - c.L_DA_TRAVA, g.Y_TAMPA7_BASE_COMP - c.L_VERTICAL);
+
+  // ========= VINCOS =========
+  doc.setLineWidth(0.2);
+  [g.X_COMP01_INI, g.X_LARG01_INI, g.X_COMP02_INI, g.X_LARG02_INI].forEach(x => {
+    line(x, g.Y_CORPO_TOPO, x, g.Y_CORPO_BASE, true, vinco);
+  });
+  line(g.X_COMP01_INI, g.Y_VINCO_CORPO_TAMPA1, g.X_LARG01_INI, g.Y_VINCO_CORPO_TAMPA1, true, vinco);
+  line(g.X_COMP02_INI, g.Y_VINCO_CORPO_TAMPA7, g.X_LARG02_INI, g.Y_VINCO_CORPO_TAMPA7, true, vinco);
+  // Tampa-Trava COM deslocamento (Tampa 1 desce, Tampa 7 sobe)
+  line(g.X_COMP01_INI + c.L_DA_TRAVA, g.Y_VINCO_TAMPA_TRAVA1 + c.VINCO_DELTA, g.X_LARG01_INI - c.L_DA_TRAVA, g.Y_VINCO_TAMPA_TRAVA1 + c.VINCO_DELTA, true, vinco);
+  line(g.X_COMP02_INI + c.L_DA_TRAVA, g.Y_VINCO_TAMPA_TRAVA7 - c.VINCO_DELTA, g.X_LARG02_INI - c.L_DA_TRAVA, g.Y_VINCO_TAMPA_TRAVA7 - c.VINCO_DELTA, true, vinco);
+  // Vincos das abas laterais
+  line(g.X_LARG01_INI, g.Y_CORPO_TOPO, g.P33_X, g.Y_CORPO_TOPO, true, vinco);
+  line(g.P40_X, g.P40_Y, g.X_LARG02_FIM, g.Y_CORPO_TOPO, true, vinco);
+  line(g.P45_X, g.Y_CORPO_BASE, g.X_COMP02_INI, g.Y_CORPO_BASE, true, vinco);
+  line(g.P12_X, g.Y_CORPO_BASE, g.X_LARG02_INI, g.Y_CORPO_BASE, true, vinco);
+
+  // Informações no rodapé
+  doc.setLineDashPattern([], 0);
+  doc.setFontSize(7);
+  doc.setTextColor(100, 100, 100);
+  doc.text(`CARTUCHO COLAGEM LATERAL  ${c.C} × ${c.L} × ${c.A} mm  |  CrieFacas  |  Escala 1:1`, margem, PAGE_H - 7);
+  doc.text(`Planificacao: ${g.LARGURA_TOTAL.toFixed(1)} × ${g.ALTURA_TOTAL.toFixed(1)} mm`, margem, PAGE_H - 3);
+
+  doc.save(`cartucho_${c.C}x${c.L}x${c.A}.pdf`);
+}
+
+// EVENTOS
+Object.values(els).forEach(el => {
+  el.addEventListener('input', atualizar);
+  el.addEventListener('change', atualizar);
+});
+
+btn.addEventListener('click', gerarPDF);
+
+// Render inicial
+atualizar();
+</script>
+
+</body>
+</html>

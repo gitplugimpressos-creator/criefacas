@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartuchos — CrieFacas</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #faf9f5;
+    --surface: #ffffff;
+    --section-bg: #f5f4ed;
+    --border: rgba(0,0,0,0.12);
+    --border-strong: rgba(0,0,0,0.25);
+    --text: #1f1f1d;
+    --text-secondary: #5f5e5a;
+    --text-tertiary: #888780;
+    --accent: #D85A30;
+    --accent-hover: #993C1D;
+    --accent-bg: rgba(216, 90, 48, 0.1);
+    --success-bg: #EAF3DE;
+    --success-text: #3B6D11;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --surface: #25251f;
+      --section-bg: #2c2c26;
+      --border: rgba(255,255,255,0.15);
+      --border-strong: rgba(255,255,255,0.3);
+      --text: #f5f4ed;
+      --text-secondary: #b4b2a9;
+      --text-tertiary: #888780;
+      --success-bg: #173404;
+      --success-text: #C0DD97;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0; padding: 0;
+    line-height: 1.6;
+  }
+  header {
+    background: var(--surface);
+    border-bottom: 0.5px solid var(--border);
+    padding: 14px 0;
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-size: 32px;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .logo b { color: var(--accent); font-weight: 500; }
+  nav { display: flex; gap: 16px; align-items: center; font-size: 14px; }
+  nav a { color: var(--text-secondary); text-decoration: none; }
+  nav a:hover { color: var(--text); }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+  .breadcrumb {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-bottom: 1.5rem;
+  }
+  .breadcrumb a {
+    color: var(--text-tertiary);
+    text-decoration: none;
+  }
+  .breadcrumb a:hover { color: var(--text-secondary); }
+  .breadcrumb b { color: var(--text); font-weight: 500; }
+  h1 {
+    font-size: 30px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+  }
+  .subtitle {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin: 0 0 2.5rem;
+  }
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 18px;
+  }
+  .product-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+  .product-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .product-card.em-breve { opacity: 0.7; }
+  .product-card.em-breve:hover {
+    border-color: var(--border);
+    transform: none;
+  }
+  .product-svg {
+    background: var(--section-bg);
+    color: var(--text);
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    position: relative;
+  }
+  .product-svg svg {
+    width: 100%;
+    height: 100%;
+    max-width: 240px;
+  }
+  .badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .badge-disponivel {
+    background: var(--success-bg);
+    color: var(--success-text);
+  }
+  .badge-em-breve {
+    background: var(--section-bg);
+    color: var(--text-tertiary);
+    border: 0.5px solid var(--border);
+  }
+  .product-content {
+    padding: 1.25rem 1.25rem 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .product-content h3 {
+    font-size: 17px;
+    font-weight: 500;
+    margin: 0 0 6px;
+  }
+  .product-content > p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0 0 14px;
+    line-height: 1.5;
+  }
+  .features {
+    list-style: none;
+    margin: 0 0 16px;
+    padding: 0;
+    font-size: 12px;
+    flex: 1;
+  }
+  .features li {
+    padding: 4px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .features li i {
+    color: var(--accent);
+    font-size: 14px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .features li.dim i {
+    color: var(--text-tertiary);
+  }
+  .btn {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    text-align: center;
+    width: 100%;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-disabled {
+    background: var(--section-bg);
+    color: var(--text-tertiary);
+    cursor: not-allowed;
+  }
+  @media (max-width: 600px) {
+    h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">crie<b>facas</b></a>
+    <nav>
+      <a href="/">Início</a>
+      <a href="/dashboard.html">Meu painel</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="breadcrumb">
+    <a href="/">Início</a> ›
+    <b>Cartuchos</b>
+  </div>
+
+  <h1>Cartuchos</h1>
+  <p class="subtitle">Escolha o tipo de cartucho que você quer criar</p>
+
+  <div class="products-grid">
+
+    <!-- CARD 1: Cartucho Colagem Lateral -->
+    <div class="product-card">
+      <div class="product-svg">
+        <span class="badge badge-disponivel">Disponível</span>
+        <!-- SVG: faca planificada do Cartucho Colagem Lateral 60x30x80 -->
+        <svg viewBox="-5 -5 270 235" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <!-- Contorno principal (CORTE) -->
+          <g stroke="#D8006A" stroke-width="0.5" fill="none">
+            <!-- Aba de cola -->
+            <line x1="0" y1="82.6" x2="0" y2="157.4"/>
+            <line x1="0" y1="82.6" x2="15" y2="80"/>
+            <line x1="0" y1="157.4" x2="15" y2="160"/>
+            <!-- Base esquerda -->
+            <line x1="15" y1="160" x2="75.5" y2="160"/>
+            <!-- Aba inferior esq -->
+            <line x1="75.5" y1="160" x2="75.5" y2="164"/>
+            <line x1="75.5" y1="164" x2="78.3" y2="166.8"/>
+            <line x1="78.3" y1="166.8" x2="98.6" y2="189"/>
+            <path d="M 98.6 189 Q 98.6 189 100.6 189"/>
+            <line x1="100.6" y1="189" x2="105" y2="189"/>
+            <line x1="105" y1="189" x2="105" y2="160"/>
+            <!-- Tampa 7 lateral esq -->
+            <line x1="105" y1="160" x2="105" y2="190"/>
+            <!-- Trava 7 -->
+            <line x1="105" y1="190" x2="109" y2="212"/>
+            <line x1="111" y1="212" x2="129" y2="212"/>
+            <line x1="131" y1="212" x2="135" y2="190"/>
+            <path d="M 109 212 Q 111 212 111 212"/>
+            <path d="M 129 212 Q 131 212 131 212"/>
+            <!-- Tampa 7 lateral dir -->
+            <line x1="135" y1="190" x2="135" y2="160"/>
+            <!-- Aba inferior dir -->
+            <line x1="135" y1="160" x2="194.5" y2="160"/>
+            <line x1="194.5" y1="160" x2="194.5" y2="164"/>
+            <line x1="194.5" y1="164" x2="191.7" y2="166.8"/>
+            <line x1="191.7" y1="166.8" x2="170.4" y2="189"/>
+            <line x1="170.4" y1="189" x2="135" y2="189"/>
+            <line x1="135" y1="189" x2="135" y2="160"/>
+            <!-- Lateral direita contínua -->
+            <line x1="194.5" y1="160" x2="194.5" y2="51"/>
+            <!-- Aba superior dir -->
+            <line x1="194.5" y1="51" x2="173.4" y2="51"/>
+            <line x1="173.4" y1="51" x2="170.3" y2="73.2"/>
+            <line x1="170.3" y1="73.2" x2="167.5" y2="76"/>
+            <line x1="167.5" y1="76" x2="165.5" y2="76"/>
+            <line x1="165.5" y1="76" x2="165.5" y2="80"/>
+            <!-- Topo Comp 02 -->
+            <line x1="165.5" y1="80" x2="104.5" y2="80"/>
+            <!-- Aba superior esq -->
+            <line x1="104.5" y1="80" x2="104.5" y2="76"/>
+            <line x1="104.5" y1="76" x2="101.7" y2="73.2"/>
+            <line x1="101.7" y1="73.2" x2="98.6" y2="51"/>
+            <line x1="98.6" y1="51" x2="75" y2="51"/>
+            <!-- Lateral Tampa 1 -->
+            <line x1="75" y1="80" x2="75" y2="51"/>
+            <line x1="75" y1="51" x2="75" y2="49.5"/>
+            <!-- Trava 1 -->
+            <line x1="75" y1="49.5" x2="71" y2="27.5"/>
+            <line x1="69" y1="27.5" x2="21" y2="27.5"/>
+            <line x1="19" y1="27.5" x2="15" y2="49.5"/>
+            <!-- Tampa 1 lateral esq -->
+            <line x1="15" y1="49.5" x2="15" y2="80"/>
+          </g>
+          <!-- Vincos -->
+          <g stroke="#D8006A" stroke-width="0.3" stroke-dasharray="2,1.5" fill="none">
+            <line x1="15" y1="80" x2="15" y2="160"/>
+            <line x1="75" y1="80" x2="75" y2="160"/>
+            <line x1="105" y1="80" x2="105" y2="160"/>
+            <line x1="165" y1="80" x2="165" y2="160"/>
+            <line x1="15" y1="79.5" x2="75" y2="79.5"/>
+            <line x1="105" y1="160.5" x2="165" y2="160.5"/>
+            <line x1="75" y1="80" x2="104.5" y2="80"/>
+            <line x1="165.5" y1="80" x2="194.5" y2="80"/>
+            <line x1="75.5" y1="160" x2="105" y2="160"/>
+            <line x1="165" y1="160" x2="194.5" y2="160"/>
+          </g>
+        </svg>
+      </div>
+      <div class="product-content">
+        <h3>Cartucho Colagem Lateral</h3>
+        <p>Cartucho clássico para embalagens em geral. Possui colagem lateral, travas em cima e embaixo, e 4 abas laterais para travamento da caixa quando montada.</p>
+        <ul class="features">
+          <li><i class="ti ti-check"></i> Comprimento, Largura e Altura configuráveis</li>
+          <li><i class="ti ti-check"></i> Travas com afunilamento e arredondamento</li>
+          <li><i class="ti ti-check"></i> 4 abas laterais simétricas para travamento</li>
+          <li><i class="ti ti-check"></i> Compensação de espessura no painel oposto</li>
+        </ul>
+        <a href="/gerador-cartucho-colagem-lateral.html" class="btn btn-primary">Criar faca →</a>
+      </div>
+    </div>
+
+    <!-- CARD 2: Cartucho Fundo Americano (em breve) -->
+    <div class="product-card em-breve">
+      <div class="product-svg">
+        <span class="badge badge-em-breve">Em breve</span>
+        <svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#888780" stroke-width="0.6" fill="none" opacity="0.5">
+            <rect x="20" y="40" width="200" height="120" rx="2"/>
+            <line x1="60" y1="40" x2="60" y2="160" stroke-dasharray="3,2"/>
+            <line x1="120" y1="40" x2="120" y2="160" stroke-dasharray="3,2"/>
+            <line x1="180" y1="40" x2="180" y2="160" stroke-dasharray="3,2"/>
+            <line x1="20" y1="40" x2="120" y2="10"/>
+            <line x1="120" y1="10" x2="220" y2="40"/>
+            <line x1="60" y1="160" x2="120" y2="190"/>
+            <line x1="120" y1="190" x2="180" y2="160"/>
+          </g>
+        </svg>
+      </div>
+      <div class="product-content">
+        <h3>Cartucho Fundo Americano</h3>
+        <p>Cartucho com fundo travado em forma de leque, ideal para produtos com peso. Não precisa de cola no fundo após montado.</p>
+        <ul class="features">
+          <li class="dim"><i class="ti ti-clock"></i> Em desenvolvimento</li>
+        </ul>
+        <button class="btn btn-disabled" disabled>Em breve</button>
+      </div>
+    </div>
+
+    <!-- CARD 3: Cartucho Fundo Automático (em breve) -->
+    <div class="product-card em-breve">
+      <div class="product-svg">
+        <span class="badge badge-em-breve">Em breve</span>
+        <svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#888780" stroke-width="0.6" fill="none" opacity="0.5">
+            <rect x="20" y="40" width="200" height="120" rx="2"/>
+            <line x1="60" y1="40" x2="60" y2="160" stroke-dasharray="3,2"/>
+            <line x1="120" y1="40" x2="120" y2="160" stroke-dasharray="3,2"/>
+            <line x1="180" y1="40" x2="180" y2="160" stroke-dasharray="3,2"/>
+            <path d="M 60 160 L 90 180 L 120 160 L 150 180 L 180 160" stroke-linejoin="round"/>
+            <line x1="20" y1="40" x2="220" y2="40"/>
+          </g>
+        </svg>
+      </div>
+      <div class="product-content">
+        <h3>Cartucho Fundo Automático</h3>
+        <p>Fundo que se monta automaticamente ao abrir a caixa, sem necessidade de dobras manuais. Ideal para produção em escala.</p>
+        <ul class="features">
+          <li class="dim"><i class="ti ti-clock"></i> Em desenvolvimento</li>
+        </ul>
+        <button class="btn btn-disabled" disabled>Em breve</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
