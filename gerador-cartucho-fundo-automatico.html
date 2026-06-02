@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartucho Fundo Automático — CrieFacas</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #faf9f5;
+    --surface: #ffffff;
+    --section-bg: #f5f4ed;
+    --border: rgba(0,0,0,0.12);
+    --border-strong: rgba(0,0,0,0.25);
+    --text: #1f1f1d;
+    --text-secondary: #5f5e5a;
+    --text-tertiary: #888780;
+    --accent: #D85A30;
+    --accent-hover: #993C1D;
+    --accent-bg: rgba(216, 90, 48, 0.1);
+    --info-bg: #E6F1FB;
+    --info-text: #0C447C;
+    --error-bg: #FCEBEB;
+    --error-text: #791F1F;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --surface: #25251f;
+      --section-bg: #2c2c26;
+      --border: rgba(255,255,255,0.15);
+      --border-strong: rgba(255,255,255,0.3);
+      --text: #f5f4ed;
+      --text-secondary: #b4b2a9;
+      --text-tertiary: #888780;
+      --accent-bg: rgba(216, 90, 48, 0.18);
+      --info-bg: #042C53;
+      --info-text: #85B7EB;
+      --error-bg: #501313;
+      --error-text: #F09595;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    background: var(--bg); color: var(--text); margin: 0; line-height: 1.6;
+  }
+  /* HEADER */
+  header { background: var(--surface); border-bottom: 0.5px solid var(--border); padding: 16px 0; }
+  .header-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem;
+    display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-size: 1.35rem; font-weight: 400; color: var(--text); text-decoration: none; letter-spacing: -0.5px; }
+  .logo b { color: var(--accent); font-weight: 700; }
+  nav a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; margin-left: 1.25rem; }
+  nav a:hover { color: var(--accent); }
+  /* CONTAINER */
+  .container { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+  .breadcrumb { font-size: 0.85rem; color: var(--text-tertiary); margin-bottom: 1.25rem; }
+  .breadcrumb a { color: var(--text-secondary); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb b { color: var(--text); font-weight: 600; }
+  .layout-2col { display: grid; grid-template-columns: minmax(360px, 440px) 1fr; gap: 20px; align-items: start; }
+  .col-form { background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.75rem; }
+  .col-preview { background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.5rem; position: sticky; top: 1rem; }
+  h1 { font-size: 1.5rem; margin: 0 0 0.25rem; }
+  .desc { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .sec-title { font-size: 0.72rem; letter-spacing: 1.2px; text-transform: uppercase; color: var(--accent);
+    font-weight: 700; margin: 1.5rem 0 0.85rem; }
+  .sec-title:first-of-type { margin-top: 0; }
+  .field { margin-bottom: 1rem; }
+  .field label { display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.35rem; font-weight: 500; }
+  .input-row { display: flex; align-items: center; gap: 0.5rem; }
+  .input-row input { flex: 1; background: var(--bg); border: 0.5px solid var(--border-strong); color: var(--text);
+    padding: 0.6rem 0.7rem; border-radius: 8px; font-size: 1rem; width: 100%; }
+  .input-row input:focus { outline: none; border-color: var(--accent); }
+  .input-row .unit { color: var(--text-tertiary); font-size: 0.85rem; min-width: 24px; }
+  .hint { font-size: 0.75rem; color: var(--text-tertiary); margin-top: 0.3rem; }
+  details { margin-top: 0.5rem; border-top: 0.5px solid var(--border); padding-top: 0.75rem; }
+  summary { cursor: pointer; font-size: 0.9rem; color: var(--accent); list-style: none; padding: 0.4rem 0; font-weight: 600; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "▸"; margin-right: 0.4rem; display: inline-block; transition: transform 0.2s; }
+  details[open] summary::before { transform: rotate(90deg); }
+  .btn-primary { width: 100%; background: var(--accent); color: #fff; border: none; padding: 0.85rem;
+    border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 1.25rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .info-box { background: var(--section-bg); border: 0.5px solid var(--border); border-radius: 8px;
+    padding: 0.85rem; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.7; margin-top: 1rem; }
+  .info-box b { color: var(--text); }
+  .error-box { background: var(--error-bg); color: var(--error-text); padding: 0.7rem 0.85rem;
+    border-radius: 8px; font-size: 0.8rem; margin-top: 0.75rem; display: none; }
+  .error-box.show { display: block; }
+  /* PREVIEW */
+  .preview-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.9rem; }
+  .preview-header h3 { margin: 0; font-size: 1rem; }
+  .zoom-btns { display: flex; gap: 0.4rem; }
+  .zoom-btns button { background: var(--bg); border: 0.5px solid var(--border-strong); color: var(--text);
+    width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-size: 1rem; }
+  .zoom-btns button:hover { border-color: var(--accent); }
+  .legend { display: flex; gap: 1rem; font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 0.75rem; }
+  .legend span { display: flex; align-items: center; gap: 0.3rem; }
+  .legend i { width: 18px; height: 0; border-top: 2px solid var(--accent); display: inline-block; }
+  .legend i.dot { border-top-style: dotted; border-top-width: 2.5px; }
+  .legend i.mix { border-top-style: dashed; }
+  .preview-canvas { background: #fff; border: 0.5px solid var(--border); border-radius: 8px;
+    overflow: auto; padding: 1rem; min-height: 320px; display: flex; align-items: center; justify-content: center; }
+  .preview-canvas svg { max-width: 100%; height: auto; }
+  .preview-info { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.85rem; line-height: 1.7; }
+  .preview-info b { color: var(--text); }
+  @media (max-width: 860px) { .layout-2col { grid-template-columns: 1fr; } .col-preview { position: static; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">crie<b>facas</b></a>
+    <nav>
+      <a href="/">Início</a>
+      <a href="/dashboard.html">Meu painel</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="/">Início</a> ›
+    <a href="/cartuchos.html">Cartuchos</a> ›
+    <b>Cartucho Fundo Automático</b>
+  </div>
+
+  <!-- BARRA DE CONTADOR DE FACAS (largura completa, fora do 2col) -->
+  <div id="barra-contador" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--section-bg); border-radius: 8px; margin-bottom: 1.5rem; border: 0.5px solid var(--border);">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span style="font-size: 13px; color: var(--text-secondary);">Olá,</span>
+      <span id="nome-usuario" style="font-size: 13px; font-weight: 500;">[Nome do Usuário]</span>
+      <span style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(216, 90, 48, 0.15); color: var(--accent);">
+        <span id="plano-usuario">FREE</span>
+      </span>
+    </div>
+    <div style="text-align: right;">
+      <div id="contador-facas" style="font-size: 14px; font-weight: 500;">
+        <span id="facas-restantes">2</span> de <span id="facas-total">2</span> <span id="contador-label">arquivos restantes</span>
+      </div>
+      <div id="contador-sub" style="font-size: 11px; color: var(--text-tertiary);">no plano grátis</div>
+    </div>
+  </div>
+
+  <!-- AVISO DE LIMITE ATINGIDO (oculto por padrão) -->
+  <div id="aviso-limite" style="display: none; padding: 14px 18px; background: rgba(216, 90, 48, 0.08); border: 0.5px solid var(--accent); border-radius: 8px; margin-bottom: 1.5rem;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <i class="ti ti-info-circle" style="font-size: 18px; color: var(--accent);"></i>
+      <div style="flex: 1; font-size: 13px;">
+        <strong id="aviso-limite-titulo">Você atingiu o limite de arquivos.</strong>
+        <span style="color: var(--text-secondary);">Considere fazer upgrade do seu plano para continuar criando.</span>
+      </div>
+      <a href="/planos" style="font-size: 13px; padding: 6px 14px; background: var(--accent); color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">Ver planos</a>
+    </div>
+  </div>
+
+  <div class="layout-2col">
+    <!-- FORMULÁRIO -->
+    <div class="col-form">
+      <h1>Cartucho Fundo Automático</h1>
+      <p class="desc">Cartucho retangular com fundo crash-lock — monta sozinho ao abrir. Tampa com trava de encaixe e travas internas nas laterais.</p>
+
+      <div class="sec-title">Medidas</div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1rem;">
+        <div class="field" style="margin-bottom:0;">
+          <label>Largura (mm)</label>
+          <div class="input-row"><input type="number" id="largura" value="70" step="0.5" min="40" max="300"></div>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>Altura (mm)</label>
+          <div class="input-row"><input type="number" id="altura" value="100" step="0.5" min="40" max="300"></div>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>Lateral (mm)</label>
+          <div class="input-row"><input type="number" id="lateral" value="40" step="0.5" min="30" max="200"></div>
+        </div>
+      </div>
+
+      <div class="sec-title">Tipo de Saída</div>
+      <div class="field">
+        <select id="modo" style="width:100%;background:var(--bg);border:0.5px solid var(--border-strong);color:var(--text);padding:0.6rem 0.7rem;border-radius:8px;font-size:0.95rem;">
+          <option value="grafica">Faca Gráfica (CutContour)</option>
+          <option value="silhouette">Plotter / Silhouette (recorte eletrônico)</option>
+        </select>
+        <div class="hint">Gráfica: magenta (corte sólido, vinco pontilhado). Silhouette: vermelho (corte) e azul (vinco) sólidos.</div>
+      </div>
+
+      <details>
+        <summary>Opções Avançadas</summary>
+        <div class="field">
+          <label>Aba de cola</label>
+          <div class="input-row"><input type="number" id="aba" value="15" step="0.5" min="10" max="25"><span class="unit">mm</span></div>
+          <div class="hint">Padrão 15 mm. Varia de 10 a 25 mm.</div>
+        </div>
+        <div class="field">
+          <label>Range de travamento</label>
+          <div class="input-row"><input type="number" id="range" value="5" step="0.5" min="3" max="10"><span class="unit">mm</span></div>
+          <div class="hint">3 a 10 mm. O afunilamento da trava acompanha.</div>
+        </div>
+        <div class="field">
+          <label>Curva do range</label>
+          <div class="input-row"><input type="number" id="curva" value="1" step="0.1" min="1" max="2"><span class="unit">mm</span></div>
+        </div>
+        <div class="field">
+          <label>Posição do vinco</label>
+          <div class="input-row"><input type="number" id="vincooff" value="0.5" step="0.1" min="0.5" max="1"><span class="unit">mm</span></div>
+        </div>
+        <div class="field">
+          <label>Arredondamento da trava</label>
+          <div class="input-row"><input type="number" id="raio" value="5" step="0.5" min="0" max="10"><span class="unit">mm</span></div>
+        </div>
+        <div class="field">
+          <label>Altura das travas internas</label>
+          <div class="input-row"><input type="number" id="altTrava" step="0.5" min="5" placeholder="34.0 (auto)" max="40"><span class="unit">mm</span></div>
+          <div class="hint">Padrão automático = 50% da largura − 1 mm. Máx. travado na altura da tampa.</div>
+        </div>
+      </details>
+
+      <button class="btn-primary" id="btnPdf"><i class="ti ti-download"></i> Gerar Faca (PDF)</button>
+      <div class="info-box" id="resumo"><b>Planificação:</b> 234.5 mm de largura<br><b>Corpo:</b> Fundo/Frente 70 · Lat1 40 · Lat2 39.5 mm<br><b>Altura corpo:</b> 100 mm · <b>Aba:</b> 15 mm</div>
+      <div class="error-box" id="erro"></div>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="col-preview">
+      <div class="preview-header">
+        <h3>Pré-visualização</h3>
+        <div class="zoom-btns">
+          <button id="zoomOut">−</button>
+          <button id="zoomIn">+</button>
+        </div>
+      </div>
+      <div class="legend" id="legenda"><span><i style="border-top:2px solid #D85A30"></i> Corte</span><span><i style="border-top:2.5px dotted #D85A30"></i> Vinco</span><span><i style="border-top:2px dashed #D85A30"></i> Corte misto</span></div>
+      <div class="preview-canvas" id="canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-6.00 0 246.50 199.50" width="592" height="479" preserveAspectRatio="xMidYMid meet"><line x1="15.00" y1="161.50" x2="15.00" y2="61.50" stroke="#D85A30" stroke-width="0.4" stroke-dasharray="0.2 1.4" stroke-linecap="round"></line><line x1="85.00" y1="161.50" x2="85.00" y2="61.50" stroke="#D85A30" stroke-width="0.4" stroke-dasharray="0.2 1.4" stroke-linecap="round"></line><line x1="125.00" y1="161.50" x2="125.00" y2="61.00" stroke="#D85A30" stroke-width="0.4" stroke-dasharray="0.2 1.4" stroke-linecap="round"></line><line x1="195.00" y1="161.50" x2="195.00" y2="61.00" stroke="#D85A30" stroke-width="0.4" stroke-dasharray="0.2 1.4" stroke-linecap="round"></line><line x1="85.50" y1="61.50" x2="125.00" y2="61.50" stroke="#D85A30" stroke-width="0.4" stroke-dasharray="0.2 1.4" stroke-linecap="round"></line><line x1="195.00" y1="61.50" x2="234.50" y2="61.50" stroke="#D85A30" stroke-width="0.4" stroke-dasharray="0.2 1.4" stroke-linecap="round"></line><line x1="130.00" y1="21.50" x2="190.00" y2="21.50" stroke="#D85A30" stroke-width="0.4" stroke-dasharray="0.2 1.4" stroke-linecap="round"></line><line x1="125.00" y1="61.00" x2="195.00" y2="61.00" stroke="#D85A30" stroke-width="0.4" stroke-dasharray="0.2 1.4" stroke-linecap="round"></line><line x1="65.00" y1="181.50" x2="79.00" y2="167.50" stroke="#D85A30" stroke-width="0.4" stroke-dasharray="3 2" stroke-linecap="round"></line><line x1="175.00" y1="181.50" x2="189.00" y2="167.50" stroke="#D85A30" stroke-width="0.4" stroke-dasharray="3 2" stroke-linecap="round"></line><line x1="0.00" y1="65.52" x2="15.00" y2="61.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="15.00" y1="61.50" x2="85.00" y2="61.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="85.00" y1="61.50" x2="85.50" y2="61.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="125.00" y1="61.50" x2="125.00" y2="61.00" stroke="#D85A30" stroke-width="0.4"></line><line x1="125.00" y1="61.00" x2="125.00" y2="21.00" stroke="#D85A30" stroke-width="0.4"></line><line x1="195.00" y1="21.00" x2="195.00" y2="61.00" stroke="#D85A30" stroke-width="0.4"></line><line x1="234.50" y1="61.50" x2="234.50" y2="161.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="234.50" y1="161.50" x2="15.00" y2="161.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="15.00" y1="161.00" x2="0.00" y2="145.47" stroke="#D85A30" stroke-width="0.4"></line><line x1="15.00" y1="161.00" x2="15.00" y2="161.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="0.00" y1="145.47" x2="0.00" y2="65.52" stroke="#D85A30" stroke-width="0.4"></line><line x1="125.00" y1="21.00" x2="130.00" y2="21.00" stroke="#D85A30" stroke-width="0.4"></line><line x1="190.00" y1="21.00" x2="195.00" y2="21.00" stroke="#D85A30" stroke-width="0.4"></line><line x1="130.00" y1="21.00" x2="130.00" y2="22.00" stroke="#D85A30" stroke-width="0.4"></line><line x1="190.00" y1="21.00" x2="190.00" y2="22.00" stroke="#D85A30" stroke-width="0.4"></line><line x1="126.00" y1="21.00" x2="129.42" y2="10.74" stroke="#D85A30" stroke-width="0.4"></line><line x1="194.00" y1="21.00" x2="190.58" y2="10.74" stroke="#D85A30" stroke-width="0.4"></line><line x1="136.00" y1="6.00" x2="184.00" y2="6.00" stroke="#D85A30" stroke-width="0.4"></line><line x1="234.50" y1="61.00" x2="234.50" y2="57.00" stroke="#D85A30" stroke-width="0.4"></line><line x1="234.50" y1="57.00" x2="231.67" y2="54.17" stroke="#D85A30" stroke-width="0.4"></line><line x1="231.67" y1="54.17" x2="226.88" y2="27.00" stroke="#D85A30" stroke-width="0.4"></line><line x1="226.88" y1="27.00" x2="195.00" y2="27.00" stroke="#D85A30" stroke-width="0.4"></line><line x1="85.50" y1="61.00" x2="85.50" y2="57.00" stroke="#D85A30" stroke-width="0.4"></line><line x1="85.50" y1="57.00" x2="88.33" y2="54.17" stroke="#D85A30" stroke-width="0.4"></line><line x1="88.33" y1="54.17" x2="93.12" y2="27.00" stroke="#D85A30" stroke-width="0.4"></line><line x1="93.12" y1="27.00" x2="125.00" y2="27.00" stroke="#D85A30" stroke-width="0.4"></line><line x1="15.00" y1="161.50" x2="18.36" y2="193.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="18.36" y1="193.50" x2="42.16" y2="193.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="50.00" y1="181.50" x2="50.00" y2="185.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="42.16" y1="193.50" x2="50.00" y2="185.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="79.00" y1="167.50" x2="85.00" y2="161.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="92.28" y1="181.50" x2="105.00" y2="181.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="65.00" y1="181.50" x2="50.00" y2="181.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="79.00" y1="167.50" x2="83.00" y2="171.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="65.00" y1="181.50" x2="77.00" y2="193.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="83.00" y1="171.50" x2="83.00" y2="191.10" stroke="#D85A30" stroke-width="0.4"></line><line x1="77.00" y1="193.50" x2="80.60" y2="193.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="85.00" y1="161.50" x2="92.28" y2="181.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="125.00" y1="161.50" x2="105.00" y2="181.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="125.00" y1="161.50" x2="128.36" y2="193.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="128.36" y1="193.50" x2="152.16" y2="193.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="160.00" y1="181.50" x2="160.00" y2="185.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="152.16" y1="193.50" x2="160.00" y2="185.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="189.00" y1="167.50" x2="195.00" y2="161.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="202.28" y1="181.50" x2="215.00" y2="181.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="175.00" y1="181.50" x2="160.00" y2="181.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="189.00" y1="167.50" x2="193.00" y2="171.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="175.00" y1="181.50" x2="187.00" y2="193.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="193.00" y1="171.50" x2="193.00" y2="191.10" stroke="#D85A30" stroke-width="0.4"></line><line x1="187.00" y1="193.50" x2="190.60" y2="193.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="195.00" y1="161.50" x2="202.28" y2="181.50" stroke="#D85A30" stroke-width="0.4"></line><line x1="234.50" y1="161.50" x2="215.00" y2="181.50" stroke="#D85A30" stroke-width="0.4"></line><path d="M 129.42 10.74 Q 131.00 6.00 136.00 6.00" fill="none" stroke="#D85A30" stroke-width="0.4"></path><path d="M 190.58 10.74 Q 189.00 6.00 184.00 6.00" fill="none" stroke="#D85A30" stroke-width="0.4"></path><path d="M 83.00 191.10 Q 83.00 193.50 80.60 193.50" fill="none" stroke="#D85A30" stroke-width="0.4"></path><path d="M 193.00 191.10 Q 193.00 193.50 190.60 193.50" fill="none" stroke="#D85A30" stroke-width="0.4"></path></svg></div>
+      <div class="preview-info" id="info"><b>Range:</b> 5 mm · <b>Curva:</b> 1 mm<br><b>Vinco:</b> 0.5 mm · <b>Arredond.:</b> 5 mm<br><b>Travas internas:</b> 34.0 mm (auto = ½ largura − 1) (máx 40.0)</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const COR_CORTE='#D85A30', COR_VINCO='#D85A30';   // accent CrieFacas no preview (modo gráfica)
+const PDF_MAGENTA=[236,0,140];                     // CutContour CMYK 0/100/0/0
+
+// esquema de cores/estilo conforme o modo de saída
+function esquema(){
+  const modo=$('modo').value;
+  if(modo==='silhouette'){
+    return {
+      modo,
+      // preview (SVG hex)
+      corteHex:'#e1142d', vincoHex:'#1453e1', mistoHex:'#1453e1',
+      // PDF (RGB)
+      corteRGB:[255,0,0], vincoRGB:[0,0,255], mistoRGB:[0,0,255],
+      // estilos: silhouette = tudo sólido
+      vincoDashSVG:null, mistoDashSVG:null,
+      vincoDashPDF:[], mistoDashPDF:[],
+      legenda:[['Corte','#e1142d',false],['Vinco','#1453e1',false]]
+    };
+  }
+  // gráfica (CutContour)
+  return {
+    modo,
+    corteHex:'#D85A30', vincoHex:'#D85A30', mistoHex:'#D85A30',
+    corteRGB:PDF_MAGENTA, vincoRGB:PDF_MAGENTA, mistoRGB:PDF_MAGENTA,
+    vincoDashSVG:'0.2 1.4', mistoDashSVG:'3 2',
+    vincoDashPDF:[0.4,1.0], mistoDashPDF:[3,2],
+    legenda:[['Corte','#D85A30',false],['Vinco','#D85A30','dot'],['Corte misto','#D85A30','dash']]
+  };
+}
+const rad=d=>d*Math.PI/180;
+let zoom=1;
+function val(id){return parseFloat($(id).value)||0;}
+
+// =================== GEOMETRIA (porta exata do faca.py) ===================
+function geometria(){
+  const Largura=val('largura'), Altura=val('altura'), Lateral=val('lateral');
+  const aba=val('aba'), RANGE=val('range'), CURVA=val('curva'),
+        VINCO_OFF=val('vincooff'), RAIO=val('raio');
+
+  const pAba=aba, pFundo=Largura, pLat1=Lateral, pFrente=Largura, pLat2=Lateral-0.5;
+  const hCorpo=Altura, hFrente=Altura+0.5;
+  const cols=[pAba,pFundo,pLat1,pFrente,pLat2];
+  const altP=[hCorpo,hCorpo,hCorpo,hFrente,hCorpo];
+  const xs=[0]; cols.forEach(w=>xs.push(xs[xs.length-1]+w));
+  const altLocal=i=>{let h=[];if(i-1>=0)h.push(altP[i-1]);if(i<altP.length)h.push(altP[i]);return Math.max(...h);};
+
+  const P={}; const add=(n,x,y)=>P[n]=[x,y];
+  const cut=[], crz=[], mix=[]; const arcs=[];
+  const L=(a,k='cut')=> (k==='cut'?cut:k==='crz'?crz:mix).push(a);
+
+  const colL=["A","B","C","D","E","F"];
+  for(let i=0;i<xs.length;i++){add(colL[i],xs[i],altLocal(i));add(colL[i]+"'",xs[i],0);}
+
+  const A_drop=pAba*Math.tan(rad(15));
+  const A_y=altP[0]-A_drop; P["A"]=[xs[0],A_y];
+
+  const trava_h=15.0;
+  const lat1=pLat1, frente=pFrente;
+  const prof=0.80*lat1, Bl_x=xs[1], Bl2_y=-prof, Bl2_x=Bl_x+prof*Math.tan(rad(6));
+  add("Bl2",Bl2_x,Bl2_y);
+  const Bl3_x=Bl2_x+0.34*frente; add("Bl3",Bl3_x,Bl2_y);
+  const cx=(xs[1]+xs[2])/2, dc=0.50*lat1;
+  add("M",cx,-dc); add("M2",cx,-dc-4);
+  const Cl_x=xs[2], Cl2_y=-dc, Cl2_x=Cl_x-dc; add("Cl2",Cl2_x,Cl2_y);
+  const Pint_x=xs[2]-6, Pint_y=Pint_x-xs[2]; add("Pint",Pint_x,Pint_y);
+  const Pint2_x=xs[2]-2, Pint2_y=Pint_y-(Pint2_x-Pint_x); add("Pint2",Pint2_x,Pint2_y);
+  add("Pint3",Pint2_x,Bl2_y);
+  const Cl2d_x=Cl2_x+(Cl2_y-Bl2_y); add("Cl2d",Cl2d_x,Bl2_y);
+  const desc50=0.50*lat1;
+  const Cld_x=xs[2]+desc50*Math.tan(rad(20)); add("Cld",Cld_x,-desc50);
+  const Dld_x=xs[3]-desc50*Math.tan(rad(45)); add("Dld",Dld_x,-desc50);
+  const Al_rise=(xs[1]-xs[0])*Math.tan(rad(46)); const Al_y=0.5+Al_rise; P["A'"]=[xs[0],Al_y];
+
+  const front_top=hFrente, tampa_h=pLat1, tampa_y=front_top+tampa_h;
+  const AFUN=RANGE;
+  add("D2",xs[3],tampa_y); add("E2",xs[4],tampa_y);
+  const vinco_ty=tampa_y-VINCO_OFF;
+  const trava_top=tampa_y+trava_h;
+
+  const sobe=RANGE-1, cat=sobe/Math.SQRT2, corpo_top=front_top;
+  const F_x=xs[5];
+  const C2_x=xs[2]+0.5;
+  const tampaMax=pLat1;                       // altura da tampa = Lat1 (limite)
+  const padraoTrava=Largura/2-1;              // padrão dinâmico = 50% largura - 1
+  const campoTrava=$('altTrava').value.trim();
+  let altC = campoTrava==='' ? padraoTrava : parseFloat(campoTrava);
+  if(!altC||altC<=0) altC=padraoTrava;
+  altC=Math.min(altC, tampaMax);              // não ultrapassa a tampa
+  const angv=rad(10);
+  const C4_x=C2_x+cat, C4_y=corpo_top+sobe+cat, C5_y=corpo_top+altC;
+  const C5_x=C4_x+(C5_y-C4_y)*Math.tan(angv);
+  const F3_x=F_x-cat, F3_y=corpo_top+sobe+cat, F4_y=corpo_top+altC;
+  const F4_x=F3_x-(F4_y-F3_y)*Math.tan(angv);
+
+  // ============ SEGMENTOS ============
+  for(let i=1;i<xs.length-1;i++){const h=altLocal(i);L([xs[i],0,xs[i],h],'crz');}
+  const FRENTE=3;
+  L([xs[0],A_y,xs[1],altP[0]]);
+  for(let idx=1;idx<cols.length;idx++){
+    const hp=(idx-1!==FRENTE)?altP[idx-1]:altP[FRENTE], hc=altP[idx];
+    if(idx===FRENTE){
+      if(hc!==hp)L([xs[idx],hp,xs[idx],hc]);
+      L([xs[idx],hc,xs[idx],tampa_y]);
+      L([xs[idx+1],tampa_y,xs[idx+1],hc]);
+    }else if(idx===2){
+      L([xs[idx],hc,C2_x,hc]); L([C2_x,hc,xs[idx+1],hc],'crz');
+    }else if(idx===4){
+      L([xs[idx],hc,xs[idx+1],hc],'crz');
+    }else{
+      if(hc!==hp)L([xs[idx],hp,xs[idx],hc]);
+      L([xs[idx],hc,xs[idx+1],hc]);
+    }
+  }
+  L([xs[5],altP[4],xs[5],0]);
+  L([xs[5],0,xs[1],0],'crz');   // Base do corpo: VINCO (eixo de dobra do fundo crash-lock)
+  L([xs[1],0.5,xs[0],Al_y]);
+  L([xs[1],0.5,xs[1],0]);
+  L([xs[0],Al_y,xs[0],A_y]);
+
+  L([xs[3],tampa_y,xs[3]+RANGE,tampa_y]);
+  L([xs[4]-RANGE,tampa_y,xs[4],tampa_y]);
+  L([xs[3]+RANGE,tampa_y,xs[3]+RANGE,tampa_y-CURVA]);
+  L([xs[4]-RANGE,tampa_y,xs[4]-RANGE,tampa_y-CURVA]);
+  L([xs[3]+RANGE,vinco_ty,xs[4]-RANGE,vinco_ty],'crz');
+  travaArred(xs[3]+1,tampa_y, xs[3]+1+AFUN,trava_top, xs[4]-1-AFUN,trava_top, xs[4]-1,tampa_y, RAIO, cut,arcs);
+  L([xs[FRENTE],front_top,xs[FRENTE+1],front_top],'crz');
+
+  L([xs[5],corpo_top,xs[5],corpo_top+sobe]);
+  L([xs[5],corpo_top+sobe,F_x-cat,corpo_top+sobe+cat]);
+  L([F3_x,F3_y,F4_x,F4_y]); L([F4_x,F4_y,xs[4],F4_y]);
+  L([C2_x,corpo_top,C2_x,corpo_top+sobe]);
+  L([C2_x,corpo_top+sobe,C2_x+cat,corpo_top+sobe+cat]);
+  L([C4_x,C4_y,C5_x,C5_y]); L([C5_x,C5_y,xs[3],C5_y]);
+
+  const dxCopia=xs[3]-xs[1];
+  desenhaFundo(0); desenhaFundo(dxCopia);
+  L([xs[5],0, Dld_x+dxCopia,-desc50]);
+
+  function desenhaFundo(dx){
+    const X=x=>x+dx;
+    L([X(Bl_x),0,X(Bl2_x),Bl2_y]); L([X(Bl2_x),Bl2_y,X(Bl3_x),Bl2_y]);
+    L([X(cx),-dc,X(cx),-dc-4]); L([X(Bl3_x),Bl2_y,X(cx),-dc-4]); // M2 reto
+    L([X(Pint_x),Pint_y,X(Cl_x),0]);
+    L([X(Cl2_x),Cl2_y,X(Pint_x),Pint_y],'mix');
+    L([X(Cld_x),-desc50,X(Dld_x),-desc50]);
+    L([X(Cl2_x),Cl2_y,X(cx),-dc]);
+    L([X(Pint_x),Pint_y,X(Pint2_x),Pint2_y]);
+    L([X(Cl2_x),Cl2_y,X(Cl2d_x),Bl2_y]);
+    cornerArc(X(Pint2_x),Bl2_y, X(Pint2_x),Pint2_y, X(Cl2d_x),Bl2_y, 4, cut,arcs);
+    L([X(xs[2]),0,X(Cld_x),-desc50]);
+    if(dx===0) L([X(xs[3]),0,X(Dld_x),-desc50]);
+  }
+
+  return {xs,cut,crz,mix,arcs,
+    meta:{Largura,Altura,Lateral,pLat2,aba,RANGE,CURVA,VINCO_OFF,RAIO,
+          altC,tampaMax,padraoTrava,campoTravaVazio:campoTrava==='',altPedido:campoTrava===''?padraoTrava:parseFloat(campoTrava),
+          bodyW:xs[5],trava_top,fundoBot:Bl2_y}};
+}
+
+function cornerArc(vx,vy, ax,ay, bx,by, R, cut, arcs){
+  const u=(px,py,qx,qy)=>{let dx=qx-px,dy=qy-py,l=Math.hypot(dx,dy)||1;return [dx/l,dy/l];};
+  const [uax,uay]=u(vx,vy,ax,ay), [ubx,uby]=u(vx,vy,bx,by);
+  const legA=Math.hypot(ax-vx,ay-vy), legB=Math.hypot(bx-vx,by-vy);
+  const r=Math.min(R,legA*0.4,legB*0.4);
+  if(r<=0.01){cut.push([ax,ay,vx,vy]);cut.push([bx,by,vx,vy]);return;}
+  const pA=[vx+uax*r,vy+uay*r], pB=[vx+ubx*r,vy+uby*r];
+  cut.push([ax,ay,pA[0],pA[1]]); cut.push([bx,by,pB[0],pB[1]]);
+  arcs.push({p0:pA,ctrl:[vx,vy],p1:pB});
+}
+function travaArred(d6x,d6y,d7x,d7y,e7x,e7y,e6x,e6y,R,cut,arcs){
+  const u=(px,py,qx,qy)=>{let dx=qx-px,dy=qy-py,l=Math.hypot(dx,dy)||1;return [dx/l,dy/l];};
+  const diag=Math.hypot(d7x-d6x,d7y-d6y);
+  const r=Math.min(R,diag*0.45,(e7x-d7x)/2*0.9);
+  if(r<=0.01){cut.push([d6x,d6y,d7x,d7y]);cut.push([e6x,e6y,e7x,e7y]);cut.push([d7x,d7y,e7x,e7y]);return;}
+  const [ldx,ldy]=u(d7x,d7y,d6x,d6y), ld=[d7x+ldx*r,d7y+ldy*r];
+  const [ltx,lty]=u(d7x,d7y,e7x,e7y), lt=[d7x+ltx*r,d7y+lty*r];
+  const [rdx,rdy]=u(e7x,e7y,e6x,e6y), rd=[e7x+rdx*r,e7y+rdy*r];
+  const [rtx,rty]=u(e7x,e7y,d7x,d7y), rt=[e7x+rtx*r,e7y+rty*r];
+  cut.push([d6x,d6y,ld[0],ld[1]]); cut.push([e6x,e6y,rd[0],rd[1]]); cut.push([lt[0],lt[1],rt[0],rt[1]]);
+  arcs.push({p0:ld,ctrl:[d7x,d7y],p1:lt}); arcs.push({p0:rd,ctrl:[e7x,e7y],p1:rt});
+}
+
+// =================== BOUNDING BOX ===================
+function bbox(g){
+  let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9;
+  const upd=(x,y)=>{minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y);};
+  g.cut.concat(g.crz,g.mix).forEach(s=>{upd(s[0],s[1]);upd(s[2],s[3]);});
+  g.arcs.forEach(a=>{upd(a.p0[0],a.p0[1]);upd(a.p1[0],a.p1[1]);upd(a.ctrl[0],a.ctrl[1]);});
+  const m=6; return {minX:minX-m,minY:minY-m,maxX:maxX+m,maxY:maxY+m};
+}
+
+// =================== SVG (preview) ===================
+function gerarSVG(g){
+  const E=esquema();
+  const b=bbox(g); const W=b.maxX-b.minX, H=b.maxY-b.minY;
+  const ty=y=>(b.maxY - y);
+  const seg=(s,color,dash)=>`<line x1="${s[0].toFixed(2)}" y1="${ty(s[1]).toFixed(2)}" x2="${s[2].toFixed(2)}" y2="${ty(s[3]).toFixed(2)}" stroke="${color}" stroke-width="0.4"${dash?` stroke-dasharray="${dash}" stroke-linecap="round"`:''}/>`;
+  let el=[];
+  g.crz.forEach(s=>el.push(seg(s,E.vincoHex,E.vincoDashSVG)));
+  g.mix.forEach(s=>el.push(seg(s,E.mistoHex,E.mistoDashSVG)));
+  g.cut.forEach(s=>el.push(seg(s,E.corteHex,null)));
+  g.arcs.forEach(a=>el.push(`<path d="M ${a.p0[0].toFixed(2)} ${ty(a.p0[1]).toFixed(2)} Q ${a.ctrl[0].toFixed(2)} ${ty(a.ctrl[1]).toFixed(2)} ${a.p1[0].toFixed(2)} ${ty(a.p1[1]).toFixed(2)}" fill="none" stroke="${E.corteHex}" stroke-width="0.4"/>`));
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${b.minX.toFixed(2)} 0 ${W.toFixed(2)} ${H.toFixed(2)}" width="${(W*2.4*zoom).toFixed(0)}" height="${(H*2.4*zoom).toFixed(0)}" preserveAspectRatio="xMidYMid meet">${el.join('')}</svg>`;
+}
+
+// =================== PDF (jsPDF, escala 1:1) ===================
+function gerarPDF(){
+  const g=geometria(); const b=bbox(g);
+  const W=b.maxX-b.minX, H=b.maxY-b.minY;
+  const margem=12;
+  const PAGE_W=W+margem*2, PAGE_H=H+margem*2;
+  const { jsPDF }=window.jspdf;
+  const doc=new jsPDF({orientation: PAGE_W>=PAGE_H?'landscape':'portrait', unit:'mm', format:[PAGE_W,PAGE_H]});
+  // coordenadas: x->x-minX+margem ; y(cresce p/cima)-> PAGE_H - (y - minY + margem)
+  const PX=x=>x-b.minX+margem;
+  const PY=y=>PAGE_H-(y-b.minY+margem);
+  const E=esquema();
+  doc.setLineWidth(0.12);
+
+  // vincos
+  doc.setDrawColor(E.vincoRGB[0],E.vincoRGB[1],E.vincoRGB[2]);
+  doc.setLineDashPattern(E.vincoDashPDF,0);
+  g.crz.forEach(s=>doc.line(PX(s[0]),PY(s[1]),PX(s[2]),PY(s[3])));
+  // corte misto
+  doc.setDrawColor(E.mistoRGB[0],E.mistoRGB[1],E.mistoRGB[2]);
+  doc.setLineDashPattern(E.mistoDashPDF,0);
+  g.mix.forEach(s=>doc.line(PX(s[0]),PY(s[1]),PX(s[2]),PY(s[3])));
+  // corte sólido
+  doc.setDrawColor(E.corteRGB[0],E.corteRGB[1],E.corteRGB[2]);
+  doc.setLineDashPattern([],0);
+  g.cut.forEach(s=>doc.line(PX(s[0]),PY(s[1]),PX(s[2]),PY(s[3])));
+  // arcos (corte) — Bézier quadrático -> cúbico
+  g.arcs.forEach(a=>{
+    const p0=[PX(a.p0[0]),PY(a.p0[1])], pc=[PX(a.ctrl[0]),PY(a.ctrl[1])], p1=[PX(a.p1[0]),PY(a.p1[1])];
+    const c1=[p0[0]+2/3*(pc[0]-p0[0]), p0[1]+2/3*(pc[1]-p0[1])];
+    const c2=[p1[0]+2/3*(pc[0]-p1[0]), p1[1]+2/3*(pc[1]-p1[1])];
+    doc.lines([[c1[0]-p0[0],c1[1]-p0[1],c2[0]-p0[0],c2[1]-p0[1],p1[0]-p0[0],p1[1]-p0[1]]], p0[0],p0[1],[1,1],'S');
+  });
+
+  // rodapé
+  const t=g.meta;
+  doc.setLineDashPattern([],0);
+  doc.setFontSize(7); doc.setTextColor(120,120,120);
+  const modoTxt=E.modo==='silhouette'?'SILHOUETTE (corte vermelho / vinco azul)':'FACA GRAFICA CutContour';
+  doc.text(`CARTUCHO FUNDO AUTOMATICO  ${t.Largura} x ${t.Altura} x ${t.Lateral} mm  |  ${modoTxt}  |  CrieFacas  |  Escala 1:1`, margem, PAGE_H-6);
+  doc.text(`Planificacao: ${t.bodyW.toFixed(1)} x ${(b.maxY-b.minY).toFixed(1)} mm`, margem, PAGE_H-3);
+
+  doc.save(`fundo-automatico-${E.modo}-${t.Largura}x${t.Altura}x${t.Lateral}.pdf`);
+}
+
+// =================== RENDER ===================
+function render(){
+  let g; try{ g=geometria(); }catch(e){ return; }
+  $('canvas').innerHTML=gerarSVG(g);
+  // legenda conforme o modo
+  const E=esquema();
+  $('legenda').innerHTML=E.legenda.map(([nome,cor,estilo])=>{
+    const cls=estilo==='dot'?' style="border-top:2.5px dotted '+cor+'"':estilo==='dash'?' style="border-top:2px dashed '+cor+'"':' style="border-top:2px solid '+cor+'"';
+    return `<span><i${cls}></i> ${nome}</span>`;
+  }).join('');
+  const t=g.meta;
+  $('resumo').innerHTML=
+    `<b>Planificação:</b> ${t.bodyW.toFixed(1)} mm de largura<br>`+
+    `<b>Corpo:</b> Fundo/Frente ${t.Largura} · Lat1 ${t.Lateral} · Lat2 ${t.pLat2.toFixed(1)} mm<br>`+
+    `<b>Altura corpo:</b> ${t.Altura} mm · <b>Aba:</b> ${t.aba} mm`;
+  $('info').innerHTML=
+    `<b>Range:</b> ${t.RANGE} mm · <b>Curva:</b> ${t.CURVA} mm<br>`+
+    `<b>Vinco:</b> ${t.VINCO_OFF} mm · <b>Arredond.:</b> ${t.RAIO} mm<br>`+
+    `<b>Travas internas:</b> ${t.altC.toFixed(1)} mm ${t.campoTravaVazio?'(auto = ½ largura − 1)':''} (máx ${t.tampaMax.toFixed(1)})`;
+  // trava o máximo do campo na altura da tampa e mostra o padrão dinâmico no placeholder
+  $('altTrava').max=t.tampaMax;
+  $('altTrava').placeholder=t.padraoTrava.toFixed(1)+' (auto)';
+  const erro=$('erro'); let msgs=[];
+  if(t.Largura<40||t.Largura>300) msgs.push('Largura deve ficar entre 40 e 300 mm.');
+  if(t.Altura<40||t.Altura>300) msgs.push('Altura deve ficar entre 40 e 300 mm.');
+  if(t.Lateral<30||t.Lateral>200) msgs.push('Lateral deve ficar entre 30 e 200 mm.');
+  if(t.RANGE<3||t.RANGE>10) msgs.push('Range fora de 3–10 mm.');
+  if(t.aba<10||t.aba>25) msgs.push('Aba de cola deve ficar entre 10 e 25 mm.');
+  if(t.altPedido>t.tampaMax) msgs.push(`Altura das travas limitada a ${t.tampaMax.toFixed(1)} mm (altura da tampa).`);
+  if(msgs.length){erro.classList.add('show');erro.textContent='⚠ '+msgs.join(' ');}
+  else erro.classList.remove('show');
+}
+
+['largura','altura','lateral','aba','range','curva','vincooff','raio','altTrava']
+  .forEach(id=>$(id).addEventListener('input',render));
+$('modo').addEventListener('change',render);
+$('zoomIn').onclick=()=>{zoom=Math.min(zoom*1.2,4);render();};
+$('zoomOut').onclick=()=>{zoom=Math.max(zoom/1.2,.4);render();};
+
+// ============ SISTEMA DE CONTADOR DE FACAS ============
+// (mocado por enquanto; em produção, vem da API com backend)
+const LIMITES_PLANO = {
+  FREE: 2,
+  INICIANTE: 5,
+  BASICO: 15,
+  PRO: 25,
+  PREMIUM: 50,
+};
+const USUARIO = {
+  nome: 'Usuário Demo',
+  plano: 'FREE',
+  facas_usadas_mes: 0
+};
+
+function atualizarBarraContador() {
+  document.getElementById('nome-usuario').textContent = USUARIO.nome;
+  document.getElementById('plano-usuario').textContent = USUARIO.plano;
+  const limite = LIMITES_PLANO[USUARIO.plano];
+  const restantes = limite - USUARIO.facas_usadas_mes;
+  document.getElementById('facas-restantes').textContent = Math.max(0, restantes);
+  document.getElementById('facas-total').textContent = limite;
+
+  const labelEl = document.getElementById('contador-label');
+  const subEl = document.getElementById('contador-sub');
+  if (USUARIO.plano === 'FREE') {
+    if (labelEl) labelEl.textContent = 'arquivos restantes';
+    if (subEl) subEl.textContent = 'no plano grátis';
+  } else {
+    if (labelEl) labelEl.textContent = 'facas restantes';
+    if (subEl) subEl.textContent = 'este mês';
+  }
+
+  if (restantes <= 0) {
+    document.getElementById('aviso-limite').style.display = 'block';
+    const btn = document.getElementById('btnPdf');
+    btn.disabled = true;
+    btn.textContent = 'Limite atingido — faça upgrade';
+  }
+}
+
+atualizarBarraContador();
+
+$('btnPdf').onclick = function() {
+  const limite = LIMITES_PLANO[USUARIO.plano];
+  if (USUARIO.facas_usadas_mes >= limite) {
+    document.getElementById('aviso-limite').style.display = 'block';
+    return;
+  }
+  gerarPDF();
+  USUARIO.facas_usadas_mes++;
+  atualizarBarraContador();
+};
+
+render();
+</script>
+
+
+</body></html>

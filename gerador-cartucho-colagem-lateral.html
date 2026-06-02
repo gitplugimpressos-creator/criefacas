@@ -325,25 +325,54 @@
     <b>Cartucho Colagem Lateral</b>
   </div>
 
+    <!-- BARRA DE CONTADOR DE FACAS (largura completa, fora do 2col) -->
+    <div id="barra-contador" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--section-bg); border-radius: 8px; margin-bottom: 1.5rem; border: 0.5px solid var(--border);">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 13px; color: var(--text-secondary);">Olá,</span>
+        <span id="nome-usuario" style="font-size: 13px; font-weight: 500;">[Nome do Usuário]</span>
+        <span style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(216, 90, 48, 0.15); color: var(--accent);">
+          <span id="plano-usuario">FREE</span>
+        </span>
+      </div>
+      <div style="text-align: right;">
+        <div id="contador-facas" style="font-size: 14px; font-weight: 500;">
+          <span id="facas-restantes">2</span> de <span id="facas-total">2</span> <span id="contador-label">arquivos restantes</span>
+        </div>
+        <div id="contador-sub" style="font-size: 11px; color: var(--text-tertiary);">no plano grátis</div>
+      </div>
+    </div>
+
+    <!-- AVISO DE LIMITE ATINGIDO (oculto por padrão) -->
+    <div id="aviso-limite" style="display: none; padding: 14px 18px; background: rgba(216, 90, 48, 0.08); border: 0.5px solid var(--accent); border-radius: 8px; margin-bottom: 1.5rem;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="ti ti-info-circle" style="font-size: 18px; color: var(--accent);"></i>
+        <div style="flex: 1; font-size: 13px;">
+          <strong id="aviso-limite-titulo">Você atingiu o limite de arquivos.</strong>
+          <span style="color: var(--text-secondary);">Considere fazer upgrade do seu plano para continuar criando.</span>
+        </div>
+        <a href="/planos" style="font-size: 13px; padding: 6px 14px; background: var(--accent); color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">Ver planos</a>
+      </div>
+    </div>
+
     <div class="layout-2col">
       <div class="col-form">
         <h1>Cartucho Colagem Lateral</h1>
         <p class="subtitle">Cartucho com colagem lateral, travas de fechamento em cima e embaixo, e abas laterais para travamento da caixa.</p>
 
         <div class="section">
-          <div class="section-title">Dimensões do cartucho</div>
+          <div class="section-title">Medidas</div>
           <div class="grid-3">
             <div class="field">
-              <label for="comprimento">Comprimento (mm)</label>
+              <label for="comprimento">Largura (mm)</label>
               <input type="number" id="comprimento" value="60" min="15" max="300" step="1">
-            </div>
-            <div class="field">
-              <label for="largura">Largura (mm)</label>
-              <input type="number" id="largura" value="30" min="15" max="300" step="1">
             </div>
             <div class="field">
               <label for="altura">Altura (mm)</label>
               <input type="number" id="altura" value="80" min="30" max="300" step="1">
+            </div>
+            <div class="field">
+              <label for="largura">Lateral (mm)</label>
+              <input type="number" id="largura" value="30" min="15" max="300" step="1">
             </div>
           </div>
         </div>
@@ -352,7 +381,7 @@
           <div class="section-title">Tipo de saída</div>
           <div class="field">
             <select id="tipo_saida">
-              <option value="faca">Faca Gráfica (clicheria — magenta CutContour)</option>
+              <option value="faca">Faca Gráfica (magenta CutContour)</option>
               <option value="plotter">Plotter de Recorte (Silhouette / Cricut — vermelho + azul)</option>
             </select>
           </div>
@@ -382,16 +411,20 @@
                 <input type="number" id="l_profundidade" value="1" min="1" max="3" step="0.5">
               </div>
               <div class="field">
-                <label for="vinco_delta">Deslocamento do Vinco (mm)</label>
-                <input type="number" id="vinco_delta" value="0.5" min="0.5" max="1.5" step="0.1">
+                <label for="vinco_delta">Deslocamento Vinco Tampa-Trava (mm)</label>
+                <input type="number" id="vinco_delta" value="0.5" min="0" max="1.5" step="0.1">
               </div>
               <div class="field">
-                <label for="raio_trava">Raio da Aba de Cola (mm)</label>
+                <label for="raio_trava">Raio da Aba Travamento (mm)</label>
                 <input type="number" id="raio_trava" value="2" min="1" max="5" step="0.5">
               </div>
               <div class="field">
                 <label for="raio_aba">Raio das Abas Internas (mm)</label>
                 <input type="number" id="raio_aba" value="2" min="0" max="5" step="0.5">
+              </div>
+              <div class="field">
+                <label for="aba_interna_altura">Altura da Aba Interna (mm)</label>
+                <input type="number" id="aba_interna_altura" value="" min="5" max="200" step="0.5" placeholder="Auto (Largura/2 - 1)">
               </div>
             </div>
           </div>
@@ -418,6 +451,8 @@
         </div>
         <div class="preview-info" id="preview-info" style="display: none;">
           <div class="item"><span>Tamanho planificado:</span> <b id="preview-tamanho">— × —</b></div>
+          <div class="item"><span>Comprimento de corte:</span> <b id="preview-corte">— m</b></div>
+          <div class="item"><span>Comprimento de vinco:</span> <b id="preview-vinco">— m</b></div>
           <div class="item"><span>Saída:</span> <b id="preview-saida">—</b></div>
         </div>
       </div><!-- /.col-preview -->
@@ -441,6 +476,7 @@ const els = {
   vinco_delta: document.getElementById('vinco_delta'),
   raio_trava: document.getElementById('raio_trava'),
   raio_aba: document.getElementById('raio_aba'),
+  aba_interna_altura: document.getElementById('aba_interna_altura'),
 };
 const planinfo = document.getElementById('planinfo');
 const erroBox = document.getElementById('erro');
@@ -455,6 +491,10 @@ advToggle.addEventListener('click', () => {
 });
 
 function getConfig() {
+  // Aba interna: vazio = automático (Largura/2 - 1); preenchido = usa o valor
+  const valAbaInterna = els.aba_interna_altura.value.trim();
+  const abaInternaCustom = valAbaInterna === '' ? null : parseFloat(valAbaInterna);
+
   return {
     C: parseFloat(els.comprimento.value),
     L: parseFloat(els.largura.value),
@@ -466,6 +506,7 @@ function getConfig() {
     VINCO_DELTA: parseFloat(els.vinco_delta.value),
     RAIO_TRAVA: parseFloat(els.raio_trava.value),
     RAIO_ABA: parseFloat(els.raio_aba.value),
+    ABA_INTERNA_CUSTOM: abaInternaCustom,
     tipo_saida: els.tipo_saida.value,
   };
 }
@@ -480,7 +521,10 @@ function calcularGeometria(c) {
 
   const ABA_LAT_VERTICAL = c.L_DA_TRAVA - 1.0;
   const ABA_LAT_DIAG45 = ABA_LAT_VERTICAL;
-  const ABA_LAT_TOTAL_VERTICAL = (c.C / 2) - 1.0;
+  // Altura total da aba interna: padrão (Largura/2 - 1) ou valor customizado pelo usuário
+  const ABA_LAT_TOTAL_VERTICAL = (c.ABA_INTERNA_CUSTOM != null && !isNaN(c.ABA_INTERNA_CUSTOM))
+    ? c.ABA_INTERNA_CUSTOM
+    : (c.C / 2) - 1.0;
   const ABA_LAT_DIAG8_VERT = ABA_LAT_TOTAL_VERTICAL - ABA_LAT_VERTICAL - ABA_LAT_DIAG45 * Math.sin(45 * Math.PI / 180);
 
   const LARGURA_TOTAL = c.ABA_COLA + c.C + c.L + c.C + LARG_02;
@@ -502,10 +546,10 @@ function calcularGeometria(c) {
   const Y_P1 = Y_CORPO_TOPO + CHANFRO_Y;
   const Y_P2 = Y_CORPO_BASE - CHANFRO_Y;
 
-  const Y_VINCO_CORPO_TAMPA1 = Y_CORPO_TOPO - c.VINCO_DELTA;
-  const Y_VINCO_CORPO_TAMPA7 = Y_CORPO_BASE + c.VINCO_DELTA;
-  const Y_TAMPA1_TOPO_COMP = Y_TAMPA1_TOPO - c.VINCO_DELTA;
-  const Y_TAMPA7_BASE_COMP = Y_TAMPA7_BASE + c.VINCO_DELTA;
+  const Y_VINCO_CORPO_TAMPA1 = Y_CORPO_TOPO - 0.5; // FIXO 0,5mm (compensação de espessura do papel)
+  const Y_VINCO_CORPO_TAMPA7 = Y_CORPO_BASE + 0.5; // FIXO 0,5mm (compensação de espessura do papel)
+  const Y_TAMPA1_TOPO_COMP = Y_TAMPA1_TOPO - 0.5;  // FIXO 0,5mm (pontos do contorno acompanham a compensação)
+  const Y_TAMPA7_BASE_COMP = Y_TAMPA7_BASE + 0.5;  // FIXO 0,5mm (pontos do contorno acompanham a compensação)
   const Y_TRAVA1_TOPO_COMP = Y_TRAVA1_TOPO;
   const Y_TRAVA7_FIM_COMP = Y_TRAVA7_FIM;
   const Y_VINCO_TAMPA_TRAVA1 = c.TRAVA;
@@ -608,6 +652,160 @@ function construirPath(c, g) {
   }
 
   return { path, vincos };
+}
+
+// Calcula comprimentos totais de corte e vinco em metros
+// Arredonda PRA CIMA com 2 casas decimais (Math.ceil)
+function calcularComprimentos(c, g) {
+  const BEZIER_K_ARCO = Math.PI / 2; // arco de 90° = raio * π/2
+
+  // Helpers
+  function dist(x1, y1, x2, y2) {
+    return Math.sqrt((x2-x1)**2 + (y2-y1)**2);
+  }
+  function arc90(raio) {
+    return raio * BEZIER_K_ARCO;
+  }
+
+  let corte = 0;
+  let vinco = 0;
+
+  // ============ CORTE ============
+  // Aba de cola
+  corte += dist(0, g.Y_P1, 0, g.Y_P2);
+  corte += dist(0, g.Y_P2, g.X_COMP01_INI, g.Y_CORPO_BASE);
+  // Base esquerda → P45
+  corte += dist(g.X_COMP01_INI, g.Y_CORPO_BASE, g.P45_X, g.Y_CORPO_BASE);
+  // Aba inferior esquerda
+  corte += dist(g.P45_X, g.P45_Y, g.P46_X, g.P46_Y);
+  corte += dist(g.P46_X, g.P46_Y, g.P47_X, g.P47_Y);
+  if (c.RAIO_ABA > 0) {
+    const v8x = g.P48_X - g.P47_X, v8y = g.P48_Y - g.P47_Y;
+    const v8len = Math.sqrt(v8x*v8x + v8y*v8y);
+    const ux = v8x/v8len, uy = v8y/v8len;
+    const preX = g.P48_X - ux*c.RAIO_ABA, preY = g.P48_Y - uy*c.RAIO_ABA;
+    const posX = g.P48_X + c.RAIO_ABA, posY = g.P48_Y;
+    corte += dist(g.P47_X, g.P47_Y, preX, preY);
+    corte += arc90(c.RAIO_ABA);
+    corte += dist(posX, posY, g.P49_X, g.P49_Y);
+  } else {
+    corte += dist(g.P47_X, g.P47_Y, g.P48_X, g.P48_Y);
+    corte += dist(g.P48_X, g.P48_Y, g.P49_X, g.P49_Y);
+  }
+  // Lateral esq Comp 02
+  corte += dist(g.X_COMP02_INI, g.P49_Y, g.X_COMP02_INI, g.Y_CORPO_BASE);
+  corte += dist(g.X_COMP02_INI, g.Y_CORPO_BASE, g.X_COMP02_INI, g.Y_TAMPA7_BASE_COMP);
+
+  // Trava 7 (com arredondamento em P21/P22)
+  const dxE7 = g.AFUNIL, dyE7 = g.Y_TRAVA7_FIM_COMP - g.Y_TAMPA7_BASE_COMP;
+  const compE7 = Math.sqrt(dxE7*dxE7 + dyE7*dyE7);
+  corte += compE7 - c.RAIO_TRAVA; // segmento diagonal antes do arco
+  corte += arc90(c.RAIO_TRAVA);
+  // Linha horizontal entre P21 pos e P22 pre
+  const distHoriz7 = (g.X_LARG02_INI - g.AFUNIL - c.RAIO_TRAVA) - (g.X_COMP02_INI + g.AFUNIL + c.RAIO_TRAVA);
+  corte += distHoriz7;
+  corte += arc90(c.RAIO_TRAVA);
+  corte += compE7 - c.RAIO_TRAVA;
+
+  // Lateral dir Tampa 7
+  corte += dist(g.X_LARG02_INI, g.Y_TAMPA7_BASE_COMP, g.X_LARG02_INI, g.Y_CORPO_BASE);
+  // Lateral dir Comp 02 (P10 → P55)
+  corte += dist(g.X_LARG02_INI, g.Y_CORPO_BASE, g.X_LARG02_INI, g.P55_Y);
+
+  // Aba inferior direita
+  if (c.RAIO_ABA > 0) {
+    const v8x = g.P54_X - g.P53_X, v8y = g.P54_Y - g.P53_Y;
+    const v8len = Math.sqrt(v8x*v8x + v8y*v8y);
+    const preX = g.P54_X - (v8x/v8len)*c.RAIO_ABA, preY = g.P54_Y - (v8y/v8len)*c.RAIO_ABA;
+    const posX = g.P54_X - c.RAIO_ABA, posY = g.P54_Y;
+    corte += dist(g.P55_X, g.P55_Y, posX, posY);
+    corte += arc90(c.RAIO_ABA);
+    corte += dist(preX, preY, g.P53_X, g.P53_Y);
+  } else {
+    corte += dist(g.P55_X, g.P55_Y, g.P54_X, g.P54_Y);
+    corte += dist(g.P54_X, g.P54_Y, g.P53_X, g.P53_Y);
+  }
+  corte += dist(g.P53_X, g.P53_Y, g.P52_X, g.P52_Y);
+  corte += dist(g.P52_X, g.P52_Y, g.P12_X, g.P12_Y);
+
+  // Lateral direita contínua P12 → P44
+  corte += dist(g.X_LARG02_FIM, g.P12_Y, g.X_LARG02_FIM, g.P44_Y);
+
+  // Aba superior direita
+  if (c.RAIO_ABA > 0) {
+    const v8x = g.P43_X - g.P42_X, v8y = g.P43_Y - g.P42_Y;
+    const v8len = Math.sqrt(v8x*v8x + v8y*v8y);
+    const preX = g.P43_X - (v8x/v8len)*c.RAIO_ABA, preY = g.P43_Y - (v8y/v8len)*c.RAIO_ABA;
+    const posX = g.P43_X + c.RAIO_ABA, posY = g.P43_Y;
+    corte += dist(g.P44_X, g.P44_Y, posX, posY);
+    corte += arc90(c.RAIO_ABA);
+    corte += dist(preX, preY, g.P42_X, g.P42_Y);
+  } else {
+    corte += dist(g.P44_X, g.P44_Y, g.P43_X, g.P43_Y);
+    corte += dist(g.P43_X, g.P43_Y, g.P42_X, g.P42_Y);
+  }
+  corte += dist(g.P42_X, g.P42_Y, g.P41_X, g.P41_Y);
+  corte += dist(g.P41_X, g.P41_Y, g.P40_X, g.P40_Y);
+  // Topo Comp 02
+  corte += dist(g.P40_X, g.Y_CORPO_TOPO, g.P33_X, g.Y_CORPO_TOPO);
+
+  // Aba esquerda superior
+  corte += dist(g.P33_X, g.P33_Y, g.P34_X, g.P34_Y);
+  corte += dist(g.P34_X, g.P34_Y, g.P35_X, g.P35_Y);
+  if (c.RAIO_ABA > 0) {
+    const v8x = g.P36_X - g.P35_X, v8y = g.P36_Y - g.P35_Y;
+    const v8len = Math.sqrt(v8x*v8x + v8y*v8y);
+    const preX = g.P36_X - (v8x/v8len)*c.RAIO_ABA, preY = g.P36_Y - (v8y/v8len)*c.RAIO_ABA;
+    const posX = g.P36_X - c.RAIO_ABA, posY = g.P36_Y;
+    corte += dist(g.P35_X, g.P35_Y, preX, preY);
+    corte += arc90(c.RAIO_ABA);
+    corte += dist(posX, posY, g.P37_X, g.P37_Y);
+  } else {
+    corte += dist(g.P35_X, g.P35_Y, g.P36_X, g.P36_Y);
+    corte += dist(g.P36_X, g.P36_Y, g.P37_X, g.P37_Y);
+  }
+  // Lateral Tampa 1 (P37 → P14)
+  corte += dist(g.X_LARG01_INI, g.Y_CORPO_TOPO, g.X_LARG01_INI, g.P37_Y);
+  corte += dist(g.X_LARG01_INI, g.P37_Y, g.X_LARG01_INI, g.Y_TAMPA1_TOPO_COMP);
+
+  // Trava 1 (espelhada da Trava 7)
+  corte += compE7 - c.RAIO_TRAVA;
+  corte += arc90(c.RAIO_TRAVA);
+  corte += distHoriz7;
+  corte += arc90(c.RAIO_TRAVA);
+  corte += compE7 - c.RAIO_TRAVA;
+
+  // Lateral esquerda Tampa 1 (P13 → P3)
+  corte += dist(g.X_COMP01_INI, g.Y_TAMPA1_TOPO_COMP, g.X_COMP01_INI, g.Y_CORPO_TOPO);
+  // Chanfro P3 → P1
+  corte += dist(g.X_COMP01_INI, g.Y_CORPO_TOPO, 0, g.Y_P1);
+
+  // Incisões em L (8 segmentos: 4 horizontais L_DA_TRAVA + 4 verticais L_VERTICAL)
+  corte += 4 * c.L_DA_TRAVA;
+  corte += 4 * c.L_VERTICAL;
+
+  // ============ VINCO ============
+  // 4 verticais entre painéis (cada uma com altura do corpo)
+  vinco += 4 * c.A;
+  // Corpo-Tampa 1 (P38 → P39) — comprimento C
+  vinco += c.C;
+  // Corpo-Tampa 7 — comprimento C
+  vinco += c.C;
+  // Tampa-Trava 1 (curto) — comprimento L - 2*L_DA_TRAVA
+  vinco += c.L - 2 * c.L_DA_TRAVA;
+  // Tampa-Trava 7 (curto)
+  vinco += c.L - 2 * c.L_DA_TRAVA;
+  // Vincos das abas laterais (dobras)
+  vinco += dist(g.X_LARG01_INI, g.Y_CORPO_TOPO, g.P33_X, g.Y_CORPO_TOPO);
+  vinco += dist(g.P40_X, g.P40_Y, g.X_LARG02_FIM, g.Y_CORPO_TOPO);
+  vinco += dist(g.P45_X, g.Y_CORPO_BASE, g.X_COMP02_INI, g.Y_CORPO_BASE);
+  vinco += dist(g.P12_X, g.Y_CORPO_BASE, g.X_LARG02_INI, g.Y_CORPO_BASE);
+
+  // Converter mm → metros e arredondar PRA CIMA com 2 casas decimais
+  const corteM = Math.ceil(corte / 10) / 100; // mm/1000 * 100 = mm/10
+  const vincoM = Math.ceil(vinco / 10) / 100;
+
+  return { corteM, vincoM, corteMM: corte, vincoMM: vinco };
 }
 
 // Gera o SVG do preview a partir da geometria
@@ -883,6 +1081,12 @@ function renderPreview(c) {
   infoBox.style.display = 'block';
   document.getElementById('preview-tamanho').textContent =
     `${g.LARGURA_TOTAL.toFixed(1)} × ${g.ALTURA_TOTAL.toFixed(1)} mm`;
+
+  // Calcular e exibir comprimentos de corte e vinco
+  const comp = calcularComprimentos(c, g);
+  document.getElementById('preview-corte').textContent = `${comp.corteM.toFixed(2).replace('.', ',')} m`;
+  document.getElementById('preview-vinco').textContent = `${comp.vincoM.toFixed(2).replace('.', ',')} m`;
+
   document.getElementById('preview-saida').textContent =
     c.tipo_saida === 'plotter' ? 'Plotter (vermelho/azul)' : 'Faca Gráfica (magenta)';
 
@@ -892,6 +1096,11 @@ function renderPreview(c) {
 function atualizar() {
   const c = getConfig();
   erroBox.classList.remove('show');
+
+  // Atualizar placeholder do campo "Altura da Aba Interna" com valor padrão atual
+  const placeholderPadrao = ((c.C / 2) - 1).toFixed(1);
+  els.aba_interna_altura.placeholder = `Auto: ${placeholderPadrao} mm`;
+
   renderPreview(c);
 }
 
@@ -902,7 +1111,7 @@ function gerarPDF() {
   // PDF de tamanho dinâmico — a página é criada do tamanho exato da peça + margem
   // (igual ao gerador de sacolas, sem limite de A4)
   const margem = 15;            // margem em volta da peça
-  const espaco_rodape = 12;     // espaço extra para o texto do rodapé
+  const espaco_rodape = 16;     // espaço extra para 3 linhas de texto no rodapé
   const PAGE_W = g.LARGURA_TOTAL + 2 * margem;
   const PAGE_H = g.ALTURA_TOTAL + 2 * margem + espaco_rodape;
   const offsetX = (PAGE_W - g.LARGURA_TOTAL) / 2;
@@ -1131,10 +1340,17 @@ function gerarPDF() {
   doc.setLineDashPattern([], 0);
   doc.setFontSize(7);
   doc.setTextColor(100, 100, 100);
-  doc.text(`CARTUCHO COLAGEM LATERAL  ${c.C} × ${c.L} × ${c.A} mm  |  CrieFacas  |  Escala 1:1`, margem, PAGE_H - 7);
-  doc.text(`Planificacao: ${g.LARGURA_TOTAL.toFixed(1)} × ${g.ALTURA_TOTAL.toFixed(1)} mm`, margem, PAGE_H - 3);
 
-  doc.save(`cartucho_${c.C}x${c.L}x${c.A}.pdf`);
+  // Calcular comprimentos para incluir no PDF
+  const comp = calcularComprimentos(c, g);
+  const corteStr = comp.corteM.toFixed(2).replace('.', ',');
+  const vincoStr = comp.vincoM.toFixed(2).replace('.', ',');
+
+  doc.text(`CARTUCHO COLAGEM LATERAL  ${c.C} × ${c.A} × ${c.L} mm  |  CrieFacas  |  Escala 1:1`, margem, PAGE_H - 11);
+  doc.text(`Planificacao: ${g.LARGURA_TOTAL.toFixed(1)} × ${g.ALTURA_TOTAL.toFixed(1)} mm`, margem, PAGE_H - 7);
+  doc.text(`Comprimento de corte: ${corteStr} m  |  Comprimento de vinco: ${vincoStr} m`, margem, PAGE_H - 3);
+
+  doc.save(`cartucho_${c.C}x${c.A}x${c.L}.pdf`);
 }
 
 // EVENTOS
@@ -1143,7 +1359,61 @@ Object.values(els).forEach(el => {
   el.addEventListener('change', atualizar);
 });
 
-btn.addEventListener('click', gerarPDF);
+// ============ SISTEMA DE CONTADOR DE FACAS ============
+// (mocado por enquanto; em produção, vem da API com backend)
+const LIMITES_PLANO = {
+  FREE: 2,       // 2 arquivos vitalícios
+  INICIANTE: 5,
+  BASICO: 15,
+  PRO: 25,
+  PREMIUM: 50,
+};
+const USUARIO = {
+  nome: 'Usuário Demo',
+  plano: 'FREE',
+  facas_usadas_mes: 0
+};
+
+function atualizarBarraContador() {
+  document.getElementById('nome-usuario').textContent = USUARIO.nome;
+  document.getElementById('plano-usuario').textContent = USUARIO.plano;
+  const limite = LIMITES_PLANO[USUARIO.plano];
+  const restantes = limite - USUARIO.facas_usadas_mes;
+  document.getElementById('facas-restantes').textContent = Math.max(0, restantes);
+  document.getElementById('facas-total').textContent = limite;
+
+  // Texto adaptado: plano FREE = "arquivos restantes" (não mensal); pagos = "facas restantes este mês"
+  const labelEl = document.getElementById('contador-label');
+  const subEl = document.getElementById('contador-sub');
+  if (USUARIO.plano === 'FREE') {
+    if (labelEl) labelEl.textContent = 'arquivos restantes';
+    if (subEl) subEl.textContent = 'no plano grátis';
+  } else {
+    if (labelEl) labelEl.textContent = 'facas restantes';
+    if (subEl) subEl.textContent = 'este mês';
+  }
+
+  if (restantes <= 0) {
+    document.getElementById('aviso-limite').style.display = 'block';
+    btn.disabled = true;
+    btn.textContent = 'Limite atingido — faça upgrade';
+  }
+}
+
+atualizarBarraContador();
+
+btn.addEventListener('click', function() {
+  const limite = LIMITES_PLANO[USUARIO.plano];
+  if (USUARIO.facas_usadas_mes >= limite) {
+    document.getElementById('aviso-limite').style.display = 'block';
+    return;
+  }
+  // Gera o PDF
+  gerarPDF();
+  // Incrementa contador (em produção: chama API)
+  USUARIO.facas_usadas_mes++;
+  atualizarBarraContador();
+});
 
 // Render inicial
 atualizar();

@@ -209,6 +209,8 @@
     border-radius: 12px;
     padding: 1.5rem;
     transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
   }
   .cat-card:hover { border-color: var(--border-strong); }
   .cat-card .top {
@@ -261,6 +263,8 @@
     color: var(--text-secondary);
     margin: 0 0 16px;
     line-height: 1.5;
+    min-height: 63px;
+    flex: 1;
   }
   .cat-card a.btn {
     width: 100%;
@@ -422,7 +426,7 @@
   <div class="hero-ctas">
     <a href="/cadastro.html" class="btn btn-primary">
       <i class="ti ti-bolt" style="vertical-align: -2px; margin-right: 6px;"></i>
-      Começar grátis — 2 facas/mês
+      Cadastre grátis — 2 arquivos sem custo
     </a>
     <a href="#produtos" class="btn btn-secondary">Ver demonstração</a>
   </div>
@@ -466,7 +470,7 @@
         <span class="badge">Disponível</span>
       </div>
       <h3>Sacolas</h3>
-      <p>Sacolas de papel com alça de cordão, alça colada ou laço. Modelos meia (2 partes) ou inteira.</p>
+      <p>Sacolas de papel com alças de cordão, alças coladas. Crie modelos com 1 ou 2 partes.</p>
       <a href="/sacolas.html" class="btn btn-primary">Ver tipos de sacolas</a>
     </div>
 
@@ -515,14 +519,14 @@
       <div class="plano">
         <h4>Grátis</h4>
         <div class="preco-gratis">R$ 0</div>
-        <div class="qtd">2 facas / mês</div>
+        <div class="qtd">2 arquivos de faca</div>
         <ul>
           <li><i class="ti ti-check"></i> Sem cartão de crédito</li>
+          <li><i class="ti ti-check"></i> Sem mensalidade</li>
           <li><i class="ti ti-check"></i> PDF vetorial completo</li>
           <li><i class="ti ti-check"></i> Todas as opções</li>
-          <li><i class="ti ti-x" style="color: var(--text-tertiary)"></i><span style="color: var(--text-tertiary)">Sem facas avulsas</span></li>
         </ul>
-        <a href="/cadastro.html" class="btn btn-secondary" style="width: 100%; text-align: center;">Começar grátis</a>
+        <a href="/cadastro.html" class="btn btn-secondary" style="width: 100%; text-align: center;">Cadastrar grátis</a>
       </div>
 
       <div class="plano">
